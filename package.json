@@ -12,9 +12,14 @@
   "files": [
     "src",
     "client",
-    "README.md"
+    "test",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
-  "scripts": {},
+  "scripts": {
+    "test": "node --test"
+  },
   "keywords": [
     "dsh",
     "dsh-plugin",
@@ -23,6 +28,7 @@
   ],
   "license": "MIT",
   "dsh": {
+    "bundle": {},
     "client": {
       "platform": "web",
       "inject": [
