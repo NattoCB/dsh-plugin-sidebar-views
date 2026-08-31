@@ -505,6 +505,7 @@ window.__ModuleLoader__.load({
 		}
 
 		exports.inject = inject;
+		exports._mergePins = mergePins;
 		exports.apply = apply;
 		return module.exports;
 	}
