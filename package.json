@@ -1,0 +1,33 @@
+{
+  "name": "dsh-plugin-sidebar-views",
+  "version": "0.1.0",
+  "description": "Sidebar views switcher (workspaces / recent sessions) with a pinned-sessions group and a per-row menu (pin/unpin, copy session id). Client-only, DOM-based.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./client": "./client/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "client",
+    "README.md"
+  ],
+  "scripts": {},
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "sidebar",
+    "sessions"
+  ],
+  "license": "MIT",
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime"
+      ]
+    }
+  }
+}
