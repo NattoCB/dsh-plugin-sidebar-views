@@ -73,3 +73,32 @@ test("mergePins keeps results oldest-first", () => {
 	);
 	assert.deepEqual(merged.map((p) => p.id), ["old", "mid", "new"]);
 });
+
+/** Build a fake fiber element: memoizedProps plus an optional parent. */
+function fiberEl(props, parent) {
+	const el = { memoizedProps: props, return: parent || null };
+	el["__reactFiber$test"] = el; // the fiber node carries the .return chain
+	return el;
+}
+
+test("findWorkspaceCwd reads the menu content payload up the fiber chain", () => {
+	const exports = loadClientExports();
+	// content is a React element: cwd lives on its props
+	const menu = fiberEl({ className: "menu" },
+		fiberEl({ anchor: {} },
+			fiberEl({ content: { $$typeof: Symbol.for("react.element"), props: { label: "DeepSeekHarnessWorkspace", cwd: "/tmp/demo", createdAt: 1 } } })));
+	assert.equal(exports._findWorkspaceCwd(menu), "/tmp/demo");
+});
+
+test("findWorkspaceCwd returns undefined for non-workspace menus and broken fibers", () => {
+	const exports = loadClientExports();
+	assert.equal(exports._findWorkspaceCwd(fiberEl({})), undefined, "no content payload anywhere");
+	assert.equal(exports._findWorkspaceCwd(fiberEl({ content: { $$typeof: Symbol.for("react.element"), props: { label: "x" } } })), undefined, "content without cwd");
+	assert.equal(
+		exports._findWorkspaceCwd(fiberEl({ content: { $$typeof: Symbol.for("react.element"), props: { cwd: "" } } })),
+		undefined,
+		"empty cwd is not a workspace menu"
+	);
+	const noFiber = { memoizedProps: {} }; // element without a fiber key
+	assert.equal(exports._findWorkspaceCwd(noFiber), undefined);
+});
