@@ -1,0 +1,11 @@
+# DSH bundle patch for dsh-plugin-sidebar-views.
+# Client-only plugin: the patch row exists only to satisfy the profile
+# bundle loader (every entry of dsh.profile.bundles must declare
+# dsh.bundle.patch pointing at a real overlay file). The host half
+# contributes an inert service row; all behavior lives in client/client.js,
+# which the web client loads through the bundle's client entry.
+
+- insert:
+    - id: sidebar-views
+      name: 'dsh-plugin-sidebar-views'
+      config: {}
