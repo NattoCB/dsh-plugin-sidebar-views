@@ -45,6 +45,7 @@ window.__ModuleLoader__.load({
 		let unsub2 = null;
 		let resizer = null;
 		let menuEl = null;
+		let wsMenuObserver = null;
 
 		// ── helpers ────────────────────────────────────────────────────────
 		function relTime(ts, now) {
@@ -205,6 +206,67 @@ window.__ModuleLoader__.load({
 				openMenu(r.left, r.bottom + 4, menuItemsFor(id, title));
 			});
 			parent.appendChild(more);
+		}
+
+		// ── native workspace "…" menu: open in Finder ─────────────────────
+		// The native menu portal reuses one container per surface, so toggling
+		// it produces no childList mutations — a childList observer never
+		// fires. Instead we rescan on every captured click (the "…" button
+		// opens the menu) plus the existing slow host poll as a fallback, and
+		// key the inserted item on a class so a React re-render re-adds it.
+		function findWorkspaceCwd(el) {
+			const fk = Object.keys(el).find((k) => k.startsWith("__reactFiber$"));
+			if (fk === undefined) return undefined;
+			let f = el[fk];
+			let hops = 0;
+			while (f !== null && f !== undefined && hops < 30) {
+				const p = f.memoizedProps;
+				if (p !== null && typeof p === "object" && p.content !== null && typeof p.content === "object") {
+					const cwd = p.content.props !== null && typeof p.content.props === "object" ? p.content.props.cwd : undefined;
+					if (typeof cwd === "string" && cwd.length > 0) return cwd;
+				}
+				f = f.return;
+				hops += 1;
+			}
+			return undefined;
+		}
+
+		function enhanceWorkspaceMenus() {
+			if (workspaces === undefined || typeof workspaces.openPath !== "function") return;
+			for (const menu of document.querySelectorAll('[role="menu"]')) {
+				if (menu.querySelector(".dsx2-finder-item") !== null) continue;
+				const cwd = findWorkspaceCwd(menu);
+				if (cwd === undefined) continue;
+				const items = menu.querySelectorAll('[role="menuitem"]');
+				if (items.length === 0) continue;
+				const item = items[items.length - 1].cloneNode(false);
+				item.removeAttribute("data-disabled");
+				item.setAttribute("aria-disabled", "false");
+				item.classList.add("dsx2-finder-item");
+				item.textContent = "在 Finder 中打开";
+				item.addEventListener("click", (e) => {
+					e.stopPropagation();
+					// The native Menu listens for pointerdown to dismiss.
+					document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+					try { workspaces.openPath(cwd); } catch (error) {}
+				});
+				menu.appendChild(item);
+			}
+		}
+
+		let wsScanPending = false;
+		function scheduleWorkspaceScan() {
+			if (wsScanPending) return;
+			wsScanPending = true;
+			window.setTimeout(() => { wsScanPending = false; try { enhanceWorkspaceMenus(); } catch (error) {} }, 30);
+		}
+
+		function watchWorkspaceMenus() {
+			if (wsMenuObserver === null) {
+				document.addEventListener("click", scheduleWorkspaceScan, true);
+				wsMenuObserver = { disconnect: () => document.removeEventListener("click", scheduleWorkspaceScan, true) };
+			}
+			scheduleWorkspaceScan();
 		}
 
 		function pinMark() {
@@ -473,6 +535,7 @@ window.__ModuleLoader__.load({
 			if (unsub1 !== null) { try { unsub1(); } catch (error) {} }
 			if (unsub2 !== null) { try { unsub2(); } catch (error) {} }
 			if (resizer !== null) { try { resizer.disconnect(); } catch (error) {} }
+			if (wsMenuObserver !== null) { try { wsMenuObserver.disconnect(); } catch (error) {} wsMenuObserver = null; }
 			if (hostDiv !== null && hostDiv.parentElement !== null) hostDiv.parentElement.removeChild(hostDiv);
 			document.documentElement.classList.remove("dsx2-recent-on");
 		}
@@ -500,12 +563,14 @@ window.__ModuleLoader__.load({
 				started = true;
 				ctx.effect(() => cleanup);
 				mount(ctx);
+				watchWorkspaceMenus();
 			};
 			start();
 		}
 
 		exports.inject = inject;
 		exports._mergePins = mergePins;
+		exports._findWorkspaceCwd = findWorkspaceCwd;
 		exports.apply = apply;
 		return module.exports;
 	}
