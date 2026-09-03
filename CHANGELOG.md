@@ -5,6 +5,8 @@
 - Installable as a profile bundle: declare `dsh.bundle.patch` → `cordis.patch.yml`
   (the loader requires a resolvable patch file per bundle, not just a truthy
   `dsh.bundle`) and give the host half a real `apply`. Behavior unchanged.
+- Tab bar: drop the duplicate "+" new-session button (same `startSession`
+  flow as the header button) and rename the second tab to 历史会话.
 - Finder menu item: clone a plain row (normal color) and draw a folder glyph
   in the native icon span instead of inheriting the danger-row styling.
 
