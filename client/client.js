@@ -231,19 +231,40 @@ window.__ModuleLoader__.load({
 			return undefined;
 		}
 
+		// Folder glyph for the Finder item, drawn in the native icon style
+		// (16x16, stroke inherits the item color).
+		const FOLDER_SVG_PATH = '<path d="M1.75 4.6c0-1.05.85-1.9 1.9-1.9h2.5c.5 0 .98.2 1.34.55l.86.85h3.9c1.05 0 1.9.85 1.9 1.9v5.3c0 1.05-.85 1.9-1.9 1.9H3.65c-1.05 0-1.9-.85-1.9-1.9V4.6z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>';
+
 		function enhanceWorkspaceMenus() {
 			if (workspaces === undefined || typeof workspaces.openPath !== "function") return;
 			for (const menu of document.querySelectorAll('[role="menu"]')) {
 				if (menu.querySelector(".dsx2-finder-item") !== null) continue;
 				const cwd = findWorkspaceCwd(menu);
 				if (cwd === undefined) continue;
-				const items = menu.querySelectorAll('[role="menuitem"]');
+				const items = Array.from(menu.querySelectorAll('[role="menuitem"]'));
 				if (items.length === 0) continue;
-				const item = items[items.length - 1].cloneNode(false);
+				// Clone a plain (non-danger) item so color and structure match the
+				// regular rows; the danger row renders red.
+				const plain = items.find((mi) => !/(^|[\s_-])danger/i.test(mi.className)) || items[0];
+				const item = plain.cloneNode(true);
 				item.removeAttribute("data-disabled");
 				item.setAttribute("aria-disabled", "false");
 				item.classList.add("dsx2-finder-item");
-				item.textContent = "在 Finder 中打开";
+				item.classList.remove(...Array.from(item.classList).filter((c) => /danger/i.test(c)));
+				// Keep the icon-span structure, swap the glyph for a folder, then
+				// re-append our label after it.
+				const iconSpan = item.querySelector("span");
+				const label = document.createTextNode("在 Finder 中打开");
+				item.textContent = "";
+				if (iconSpan !== null) {
+					const svg = iconSpan.querySelector("svg");
+					if (svg !== null) {
+						svg.setAttribute("viewBox", "0 0 16 16");
+						svg.innerHTML = FOLDER_SVG_PATH;
+					}
+					item.appendChild(iconSpan);
+				}
+				item.appendChild(label);
 				item.addEventListener("click", (e) => {
 					e.stopPropagation();
 					// The native Menu listens for pointerdown to dismiss.
