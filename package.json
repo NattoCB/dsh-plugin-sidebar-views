@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-sidebar-views",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Sidebar views switcher (workspaces / recent sessions) with a pinned-sessions group and a per-row menu (pin/unpin, copy session id). Client-only, DOM-based.",
   "type": "module",
   "main": "src/index.js",
@@ -28,7 +28,9 @@
   ],
   "license": "MIT",
   "dsh": {
-    "bundle": {},
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
     "client": {
       "platform": "web",
       "inject": [
