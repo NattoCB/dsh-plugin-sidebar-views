@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.1 — 2026-09-03
+
+- Installable as a profile bundle: declare `dsh.bundle.patch` → `cordis.patch.yml`
+  (the loader requires a resolvable patch file per bundle, not just a truthy
+  `dsh.bundle`) and give the host half a real `apply`. Behavior unchanged.
+- Finder menu item: clone a plain row (normal color) and draw a folder glyph
+  in the native icon span instead of inheriting the danger-row styling.
+
+## 0.2.0 — 2026-09-03
+
+- Native workspace "…" menu gains an open-in-Finder item: the menu's fiber
+  payload carries the workspace cwd, activated through the stock
+  `workspaces.openPath` service (no host-side code). Rescans on captured
+  clicks plus a slow fallback poll because the portal reuses its container.
+
 ## 0.1.0 — 2026-08-31
 
 Initial release.
