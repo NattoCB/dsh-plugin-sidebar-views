@@ -141,3 +141,47 @@ test("findWorkspaceCwd returns undefined for non-workspace menus and broken fibe
 	const noFiber = { memoizedProps: {} }; // element without a fiber key
 	assert.equal(exports._findWorkspaceCwd(noFiber), undefined);
 });
+
+test("expandDisplayCwd passes non-display paths through untouched", () => {
+	const exports = loadClientExports();
+	assert.equal(exports._expandDisplayCwd("/tmp/demo", { items: [] }), "/tmp/demo");
+	assert.equal(exports._expandDisplayCwd("/tmp/demo", undefined), "/tmp/demo");
+	assert.equal(exports._expandDisplayCwd(undefined, { items: [] }), undefined);
+	assert.equal(exports._expandDisplayCwd("~", { items: [{ path: "/home/u" }] }), "~", "bare ~ has no suffix to match");
+});
+
+test("expandDisplayCwd resolves the host display spelling against workspace paths", () => {
+	const exports = loadClientExports();
+	const wlist = { items: [
+		{ path: "/Volumes/SSD_512G/DeepSeekHarnessWorkspace/Automation-FA-Daily" },
+		{ path: "/Users/jasperbot1/Desktop/DeepSeekHarnessWorkspace" },
+		{ path: "/Users/jasperbot1/.dsh/wechat-bridge/WeChatSpace" }
+	] };
+	assert.equal(
+		exports._expandDisplayCwd("~/Desktop/DeepSeekHarnessWorkspace", wlist),
+		"/Users/jasperbot1/Desktop/DeepSeekHarnessWorkspace"
+	);
+	assert.equal(
+		exports._expandDisplayCwd("~/Desktop/DeepSeekHarnessWorkspace", undefined),
+		"~/Desktop/DeepSeekHarnessWorkspace",
+		"no workspace list: fall back to the display spelling"
+	);
+	assert.equal(
+		exports._expandDisplayCwd("~/elsewhere/missing", wlist),
+		"~/elsewhere/missing",
+		"unmatched suffix: fall back to the display spelling"
+	);
+});
+
+test("expandDisplayCwd matches case-insensitively and skips malformed entries", () => {
+	const exports = loadClientExports();
+	const wlist = { items: [null, 42, { title: "no path" }, { path: "/Users/jasperbot1/Desktop/DeepSeekHarnessWorkspace" }] };
+	assert.equal(exports._expandDisplayCwd("~/Desktop/DeepSeekHarnessWorkspace", wlist), "/Users/jasperbot1/Desktop/DeepSeekHarnessWorkspace");
+	assert.equal(exports._expandDisplayCwd("~/desktop/deepseekharnessworkspace", wlist), "/Users/jasperbot1/Desktop/DeepSeekHarnessWorkspace");
+});
+
+test("finder menu click hands openPath an expanded folder-reveal path", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	assert.ok(code.includes("expandDisplayCwd(cwd"), "click handler must expand the display cwd before openPath");
+	assert.ok(/openPath\(expandDisplayCwd\(cwd,\s*safeSnap\(wList\)\)\s*\+\s*"\/\."\)/.test(code), "the open must carry the folder-reveal gesture suffix");
+});

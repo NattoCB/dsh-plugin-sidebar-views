@@ -314,10 +314,27 @@ window.__ModuleLoader__.load({
 					e.stopPropagation();
 					// The native Menu listens for pointerdown to dismiss.
 					document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
-					try { workspaces.openPath(cwd); } catch (error) {}
+					try { workspaces.openPath(expandDisplayCwd(cwd, safeSnap(wList)) + "/."); } catch (error) {}
 				});
 				menu.appendChild(item);
 			}
+		}
+
+		// The native menu's cwd prop is a display spelling (the host abbreviates
+		// the POSIX home to "~"), while openPath's contract expects the absolute
+		// Host-facing form; better-sidebar's interception joins "~/x" onto the
+		// workspace root and fails with ENOENT. Expand against the workspace
+		// list's absolute paths; unmatched values pass through untouched.
+		function expandDisplayCwd(cwd, wlist) {
+			if (typeof cwd !== "string" || cwd.startsWith("~") === false) return cwd;
+			const rest = cwd.slice(1).replace(/^\/+/, "").toLowerCase();
+			if (rest === "") return cwd;
+			const items = wlist !== null && typeof wlist === "object" && Array.isArray(wlist.items) ? wlist.items : [];
+			for (const w of items) {
+				const p = w !== null && typeof w === "object" ? w.path : undefined;
+				if (typeof p === "string" && p.toLowerCase().endsWith("/" + rest)) return p;
+			}
+			return cwd;
 		}
 
 		let wsScanPending = false;
@@ -697,6 +714,7 @@ window.__ModuleLoader__.load({
 		exports._mergePins = mergePins;
 		exports._partitionByWorkspace = partitionByWorkspace;
 		exports._findWorkspaceCwd = findWorkspaceCwd;
+		exports._expandDisplayCwd = expandDisplayCwd;
 		exports.apply = apply;
 		return module.exports;
 	}
