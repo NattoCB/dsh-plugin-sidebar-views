@@ -74,6 +74,45 @@ test("mergePins keeps results oldest-first", () => {
 	assert.deepEqual(merged.map((p) => p.id), ["old", "mid", "new"]);
 });
 
+test("partitionByWorkspace splits sessions by workspace membership", () => {
+	const exports = loadClientExports();
+	const rows = [
+		{ id: "s-ws", updatedAt: 3 },
+		{ id: "s-ext", updatedAt: 2 },
+		{ id: "s-ws2", updatedAt: 1 }
+	];
+	const wsOf = new Map([
+		["s-ws", { title: "Demo", path: "/tmp/Demo" }],
+		["s-ws2", { title: "Demo", path: "/tmp/Demo" }]
+	]);
+	const parts = exports._partitionByWorkspace(rows, wsOf);
+	assert.deepEqual(parts.ws.map((s) => s.id), ["s-ws", "s-ws2"]);
+	assert.deepEqual(parts.ext.map((s) => s.id), ["s-ext"]);
+});
+
+test("partitionByWorkspace treats unknown and workspace-less sessions as external", () => {
+	const exports = loadClientExports();
+	const parts = exports._partitionByWorkspace([{ id: "a" }, { id: "b" }], new Map());
+	assert.equal(parts.ws.length, 0, "no workspace membership means external");
+	assert.deepEqual(parts.ext.map((s) => s.id), ["a", "b"]);
+	assert.deepEqual(exports._partitionByWorkspace([], new Map()), { ws: [], ext: [] });
+});
+
+test("partitionByWorkspace sends Automation-* workspace sessions to the external group", () => {
+	const exports = loadClientExports();
+	const rows = [{ id: "run-1" }, { id: "run-2" }, { id: "human-1" }];
+	const wsOf = new Map([
+		// title renamed away, path still betrays the automation directory
+		["run-1", { title: "我的跑批", path: "/Volumes/x/Automation-AMV-Hourly" }],
+		// default title (directory name) marks it even if path is missing
+		["run-2", { title: "Automation-QF-Engine-Daily", path: "" }],
+		["human-1", { title: "DeepSeekHarnessWorkspace", path: "/Users/x/Desktop/DeepSeekHarnessWorkspace" }]
+	]);
+	const parts = exports._partitionByWorkspace(rows, wsOf);
+	assert.deepEqual(parts.ext.map((s) => s.id), ["run-1", "run-2"]);
+	assert.deepEqual(parts.ws.map((s) => s.id), ["human-1"]);
+});
+
 /** Build a fake fiber element: memoizedProps plus an optional parent. */
 function fiberEl(props, parent) {
 	const el = { memoizedProps: props, return: parent || null };

@@ -6,7 +6,7 @@ window.__ModuleLoader__.load({
 		Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 
 		// ── CSS (sidebar views + pinned group + row menu) ─────────────────
-		const css = ".dsx2-host{order:-1;flex:none;display:flex;flex-direction:column;gap:6px;padding:2px 0 6px}html.dsx2-recent-on .dsx2-host{flex:1 1 0;min-height:0}html.dsx2-recent-on [data-slot=\"sidebar.workspaces\"] > div > :not(.dsx2-host){display:none!important}.dsx2-bar{display:flex;align-items:center;gap:6px;flex:none}.dsx2-tabs{display:flex;flex:1;min-width:0;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.08));border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:9px;padding:2px;gap:2px}.dsx2-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;height:24px;border:none;border-radius:7px;background:transparent;color:var(--dsw-alias-label-secondary);cursor:pointer;font-size:12px;line-height:16px;padding:0 6px;white-space:nowrap;overflow:hidden;font-family:inherit}.dsx2-tab:hover{color:var(--dsw-alias-label-primary)}.dsx2-tab-active{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary);font-weight:500}.dsx2-search{display:none;align-items:center;gap:6px;height:26px;padding:0 8px;border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:8px;color:var(--dsw-alias-label-tertiary);flex:none}html.dsx2-recent-on .dsx2-search{display:flex}.dsx2-search-input{flex:1;min-width:0;border:none;outline:none;background:transparent;color:var(--dsw-alias-label-primary);font-size:12px;line-height:16px;font-family:inherit}.dsx2-search-input::placeholder{color:var(--dsw-alias-label-tertiary)}.dsx2-pinned{flex:none;display:flex;flex-direction:column;min-height:0}.dsx2-pinned-head{display:flex;align-items:center;gap:5px;height:26px;padding:0 6px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-secondary);font-size:12px;font-weight:600;user-select:none;flex:none}.dsx2-pinned-head:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12));color:var(--dsw-alias-label-primary)}.dsx2-pin-icon{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-chevron{flex:none;font-size:10px;line-height:1;color:var(--dsw-alias-label-tertiary);transition:transform .15s ease}.dsx2-chevron-closed{transform:rotate(-90deg)}.dsx2-pinned-count{flex:none;color:var(--dsw-alias-label-tertiary);font-weight:400;font-size:11px}.dsx2-pinned-rows{display:flex;flex-direction:column;max-height:150px;overflow-y:auto;padding-bottom:2px}.dsx2-pinned-closed .dsx2-pinned-rows{display:none}.dsx2-list{display:none;flex:1;min-height:0;overflow-y:auto;padding-bottom:12px}html.dsx2-recent-on .dsx2-list{display:block}.dsx2-row{display:flex;align-items:center;gap:7px;height:30px;padding:0 8px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-primary);font-size:13px;user-select:none}.dsx2-row:hover{background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-row-current{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18))}.dsx2-row-dead{opacity:.45;cursor:default}.dsx2-row-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dsx2-row-pin{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-row-tag{flex:none;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--dsw-alias-label-tertiary);font-size:11px;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1));border-radius:5px;padding:1px 5px}.dsx2-row-time{flex:none;color:var(--dsw-alias-label-tertiary);font-size:11px}.dsx2-more{display:none;flex:none;width:20px;height:20px;align-items:center;justify-content:center;border:none;background:transparent;border-radius:5px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:13px;line-height:1;padding:0}.dsx2-row:hover .dsx2-more{display:inline-flex}.dsx2-more:hover{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary)}.dsx2-dot{width:7px;height:7px;border-radius:50%;flex:none}.dsx2-dot-run{background:var(--dsw-alias-state-success-primary,#22c55e);animation:dsx2-pulse 1.6s ease-in-out infinite}.dsx2-dot-done{background:var(--dsw-alias-state-success-primary,#22c55e);opacity:.55}.dsx2-dot-warn{background:var(--dsw-alias-state-warn-primary,#f59e0b)}@keyframes dsx2-pulse{0%,100%{opacity:1}50%{opacity:.35}}.dsx2-empty{color:var(--dsw-alias-label-tertiary);padding:14px 10px;font-size:12px}.dsx2-menu{position:fixed;z-index:9999;min-width:170px;background:var(--dsw-alias-bg-layer-1,#ffffff);border:1px solid var(--dsw-alias-border-l2,rgba(0,0,0,.12));border-radius:10px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:flex;flex-direction:column}.dsx2-menu-item{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;border:none;background:transparent;border-radius:7px;color:var(--dsw-alias-label-primary);cursor:pointer;font-size:13px;text-align:left;font-family:inherit;white-space:nowrap}.dsx2-menu-item:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12))}@media (prefers-reduced-motion:reduce){.dsx2-dot-run{animation:none}}";
+		const css = ".dsx2-host{order:-1;flex:none;display:flex;flex-direction:column;gap:6px;padding:2px 0 6px}html.dsx2-recent-on .dsx2-host{flex:1 1 0;min-height:0}html.dsx2-recent-on [data-slot=\"sidebar.workspaces\"] > div > :not(.dsx2-host){display:none!important}.dsx2-bar{display:flex;align-items:center;gap:6px;flex:none}.dsx2-tabs{display:flex;flex:1;min-width:0;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.08));border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:9px;padding:2px;gap:2px}.dsx2-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;height:24px;border:none;border-radius:7px;background:transparent;color:var(--dsw-alias-label-secondary);cursor:pointer;font-size:12px;line-height:16px;padding:0 6px;white-space:nowrap;overflow:hidden;font-family:inherit}.dsx2-tab:hover{color:var(--dsw-alias-label-primary)}.dsx2-tab-active{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary);font-weight:500}.dsx2-search{display:none;align-items:center;gap:6px;height:26px;padding:0 8px;border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:8px;color:var(--dsw-alias-label-tertiary);flex:none}html.dsx2-recent-on .dsx2-search{display:flex}.dsx2-search-input{flex:1;min-width:0;border:none;outline:none;background:transparent;color:var(--dsw-alias-label-primary);font-size:12px;line-height:16px;font-family:inherit}.dsx2-search-input::placeholder{color:var(--dsw-alias-label-tertiary)}.dsx2-pinned{flex:none;display:flex;flex-direction:column;min-height:0}.dsx2-pinned-head{display:flex;align-items:center;gap:5px;height:26px;padding:0 6px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-secondary);font-size:12px;font-weight:600;user-select:none;flex:none}.dsx2-pinned-head:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12));color:var(--dsw-alias-label-primary)}.dsx2-pin-icon{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-chevron{flex:none;font-size:10px;line-height:1;color:var(--dsw-alias-label-tertiary);transition:transform .15s ease}.dsx2-chevron-closed{transform:rotate(-90deg)}.dsx2-pinned-count{flex:none;color:var(--dsw-alias-label-tertiary);font-weight:400;font-size:11px}.dsx2-pinned-rows{display:flex;flex-direction:column;max-height:150px;overflow-y:auto;padding-bottom:2px}.dsx2-pinned-closed .dsx2-pinned-rows{display:none}.dsx2-list{display:none;flex:1;min-height:0;overflow-y:auto;padding-bottom:12px}html.dsx2-recent-on .dsx2-list{display:block}.dsx2-row{display:flex;align-items:center;gap:7px;height:30px;padding:0 8px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-primary);font-size:13px;user-select:none}.dsx2-row:hover{background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-row-current{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18))}.dsx2-row-dead{opacity:.45;cursor:default}.dsx2-row-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dsx2-row-pin{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-row-tag{flex:none;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--dsw-alias-label-tertiary);font-size:11px;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1));border-radius:5px;padding:1px 5px}.dsx2-row-time{flex:none;color:var(--dsw-alias-label-tertiary);font-size:11px}.dsx2-more{display:none;flex:none;width:20px;height:20px;align-items:center;justify-content:center;border:none;background:transparent;border-radius:5px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:13px;line-height:1;padding:0}.dsx2-row:hover .dsx2-more{display:inline-flex}.dsx2-more:hover{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary)}.dsx2-dot{width:7px;height:7px;border-radius:50%;flex:none}.dsx2-dot-run{background:var(--dsw-alias-state-success-primary,#22c55e);animation:dsx2-pulse 1.6s ease-in-out infinite}.dsx2-dot-done{background:var(--dsw-alias-state-success-primary,#22c55e);opacity:.55}.dsx2-dot-warn{background:var(--dsw-alias-state-warn-primary,#f59e0b)}@keyframes dsx2-pulse{0%,100%{opacity:1}50%{opacity:.35}}.dsx2-empty{color:var(--dsw-alias-label-tertiary);padding:14px 10px;font-size:12px}.dsx2-grp-head{margin-top:3px}.dsx2-grp-icon{color:var(--dsw-alias-label-tertiary)}.dsx2-menu{position:fixed;z-index:9999;min-width:170px;background:var(--dsw-alias-bg-layer-1,#ffffff);border:1px solid var(--dsw-alias-border-l2,rgba(0,0,0,.12));border-radius:10px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:flex;flex-direction:column}.dsx2-menu-item{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;border:none;background:transparent;border-radius:7px;color:var(--dsw-alias-label-primary);cursor:pointer;font-size:13px;text-align:left;font-family:inherit;white-space:nowrap}.dsx2-menu-item:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12))}@media (prefers-reduced-motion:reduce){.dsx2-dot-run{animation:none}}";
 		const cssTagId = "dsh-plugin-sidebar-views/sidebar.css";
 		if (typeof document !== "undefined" && !document.querySelector("style[data-plugin-css=\"" + cssTagId + "\"]")) {
 			const tag = document.createElement("style");
@@ -18,6 +18,11 @@ window.__ModuleLoader__.load({
 
 		const SEARCH_SVG = '<svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.2" stroke="currentColor" stroke-width="1.2"/><path d="m10.2 10.2 3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>';
 		const PIN_SVG = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1z"/></svg>';
+		const TERMINAL_SVG = '<svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.5 6.5 8 3 11.5"/><path d="M8.5 11.5H13"/></svg>';
+
+		function folderGlyphSvg() {
+			return '<svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" aria-hidden="true">' + FOLDER_SVG_PATH + "</svg>";
+		}
 
 		const inject = ["sessions", "workspaces", "timer"];
 
@@ -29,6 +34,7 @@ window.__ModuleLoader__.load({
 		let disposed = false;
 		let mode = "workspaces";
 		let filter = "";
+		let grpState = { ws: false, ext: true };
 		let railHidden = false;
 		let hostDiv = null;
 		let tabW = null;
@@ -60,6 +66,46 @@ window.__ModuleLoader__.load({
 		function byRecency(a, b) {
 			if (b.updatedAt !== a.updatedAt) return b.updatedAt - a.updatedAt;
 			return a.id < b.id ? -1 : 1;
+		}
+
+		// Automation-owned workspaces follow Jasper's naming convention: the
+		// workspace directory (and thus its default title) starts with
+		// "Automation-" (e.g. Automation-AMV-Hourly). Sessions in them are
+		// machine traffic even though they technically belong to a workspace.
+		function isAutomationWorkspace(w) {
+			if (w === null || typeof w !== "object") return false;
+			if (typeof w.title === "string" && w.title.indexOf("Automation-") === 0) return true;
+			if (typeof w.path === "string") {
+				const seg = w.path.split("/").pop() || "";
+				return seg.indexOf("Automation-") === 0;
+			}
+			return false;
+		}
+
+		// Split recency-sorted rows into workspace-backed and external
+		// sessions. External = no workspace membership at all (headless
+		// callers) OR membership in an Automation-* workspace (automation
+		// runs attach their sessions to their own workspace).
+		function partitionByWorkspace(rows, wsOf) {
+			const ws = [];
+			const ext = [];
+			for (const s of rows) {
+				const w = wsOf.get(s.id);
+				if (w !== undefined && isAutomationWorkspace(w) === false) ws.push(s);
+				else ext.push(s);
+			}
+			return { ws: ws, ext: ext };
+		}
+
+		function loadGroupState() {
+			try {
+				const raw = JSON.parse(window.localStorage.getItem("dsx2-groups") || "{}");
+				return { ws: raw.ws === true, ext: raw.ext !== false };
+			} catch (error) { return { ws: false, ext: true }; }
+		}
+
+		function saveGroupState() {
+			try { window.localStorage.setItem("dsx2-groups", JSON.stringify(grpState)); } catch (error) {}
 		}
 
 		function safeSnap(source) {
@@ -321,6 +367,30 @@ window.__ModuleLoader__.load({
 			return el;
 		}
 
+		// Collapsible group header styled after the pinned-session head.
+		function groupHeadEl(iconSvg, label, count, collapsed, onToggle) {
+			const head = document.createElement("div");
+			head.className = "dsx2-pinned-head dsx2-grp-head";
+			const icon = document.createElement("span");
+			icon.className = "dsx2-pin-icon dsx2-grp-icon";
+			icon.innerHTML = iconSvg;
+			const text = document.createElement("span");
+			text.textContent = label;
+			const countEl = document.createElement("span");
+			countEl.className = "dsx2-pinned-count";
+			countEl.textContent = String(count);
+			const chevron = document.createElement("span");
+			chevron.className = "dsx2-chevron";
+			chevron.textContent = "▾";
+			head.appendChild(icon);
+			head.appendChild(text);
+			head.appendChild(countEl);
+			head.appendChild(chevron);
+			chevron.classList.toggle("dsx2-chevron-closed", collapsed);
+			head.addEventListener("click", onToggle);
+			return head;
+		}
+
 		function statusDot(s) {
 			if (s === undefined) return null;
 			const pending = s.pendingInteraction !== undefined && s.pendingInteraction !== null;
@@ -331,7 +401,7 @@ window.__ModuleLoader__.load({
 			return dot;
 		}
 
-		function rowEl(s, current, now, wsTitleOf) {
+		function rowEl(s, current, now, wsOf) {
 			const row = document.createElement("div");
 			row.className = "dsx2-row" + (s.id === current ? " dsx2-row-current" : "");
 			const dot = statusDot(s);
@@ -341,7 +411,8 @@ window.__ModuleLoader__.load({
 			title.className = "dsx2-row-title";
 			title.textContent = s.blank === true ? "新会话" : String(s.displayTitle || s.id);
 			row.appendChild(title);
-			const wsTitle = wsTitleOf.get(s.id);
+			const wsItem = wsOf.get(s.id);
+			const wsTitle = wsItem !== undefined ? wsItem.title : undefined;
 			if (wsTitle !== undefined) {
 				const tag = document.createElement("span");
 				tag.className = "dsx2-row-tag";
@@ -371,10 +442,10 @@ window.__ModuleLoader__.load({
 			const byId = list.byId || {};
 			const archived = new Set(wlist.archivedSessionIds || []);
 			const q = filter.trim().toLowerCase();
-			const wsTitleOf = new Map();
+			const wsOf = new Map();
 			for (const w of wlist.items || []) {
 				const sids = w.sessionIds || [];
-				for (const id of sids) if (wsTitleOf.has(id) === false) wsTitleOf.set(id, w.title);
+				for (const id of sids) if (wsOf.has(id) === false) wsOf.set(id, w);
 			}
 			const rows = [];
 			for (const id of list.ids) {
@@ -390,8 +461,29 @@ window.__ModuleLoader__.load({
 				listDiv.appendChild(emptyNote(q !== "" ? "无匹配会话" : "暂无会话"));
 				return;
 			}
+			const parts = partitionByWorkspace(rows, wsOf);
+			// While filtering, ignore collapse state so matches in the
+			// (default-collapsed) external group stay reachable.
+			const searching = q !== "";
 			const keepScroll = listDiv.scrollTop;
-			for (const s of rows) listDiv.appendChild(rowEl(s, current, now, wsTitleOf));
+			const groups = [
+				{ key: "ws", icon: folderGlyphSvg(), label: "工作区", items: parts.ws },
+				{ key: "ext", icon: TERMINAL_SVG, label: "外部调用", items: parts.ext }
+			];
+			for (const g of groups) {
+				if (g.items.length === 0) continue;
+				const collapsed = searching ? false : grpState[g.key] === true;
+				const toggle = () => {
+					if (searching) return;
+					grpState[g.key] = grpState[g.key] !== true;
+					saveGroupState();
+					renderList();
+				};
+				listDiv.appendChild(groupHeadEl(g.icon, g.label, g.items.length, collapsed, toggle));
+				if (collapsed === false) {
+					for (const s of g.items) listDiv.appendChild(rowEl(s, current, now, wsOf));
+				}
+			}
 			listDiv.scrollTop = keepScroll;
 		}
 
@@ -525,6 +617,7 @@ window.__ModuleLoader__.load({
 		}
 
 		function mount(ctx) {
+			grpState = loadGroupState();
 			const onData = () => { renderPinned(); if (mode === "recent") renderList(); };
 			if (sList !== undefined) { try { unsub1 = sList.subscribe(onData); } catch (error) {} }
 			if (wList !== undefined) { try { unsub2 = wList.subscribe(onData); } catch (error) {} }
@@ -581,6 +674,7 @@ window.__ModuleLoader__.load({
 
 		exports.inject = inject;
 		exports._mergePins = mergePins;
+		exports._partitionByWorkspace = partitionByWorkspace;
 		exports._findWorkspaceCwd = findWorkspaceCwd;
 		exports.apply = apply;
 		return module.exports;

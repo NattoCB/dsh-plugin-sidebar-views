@@ -1,7 +1,7 @@
 {
   "name": "dsh-plugin-sidebar-views",
-  "version": "0.2.1",
-  "description": "Sidebar views switcher (workspaces / recent sessions) with a pinned-sessions group and a per-row menu (pin/unpin, copy session id). Client-only, DOM-based.",
+  "version": "0.3.0",
+  "description": "Sidebar views switcher (workspaces / recent sessions) with a pinned-sessions group, workspace vs external session groups, and a per-row menu (pin/unpin, copy session id). Client-only, DOM-based.",
   "type": "module",
   "main": "src/index.js",
   "exports": {

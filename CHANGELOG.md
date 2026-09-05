@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0 — 2026-09-05
+
+- Recent sessions split into two collapsible groups: 工作区 (sessions in a
+  regular workspace) on top, 外部调用 (automation traffic) below it. External
+  covers both workspace-less sessions (headless callers) and sessions attached
+  to an `Automation-*` workspace — automation runs do join a real workspace,
+  matched by workspace title or directory basename prefix (`Automation-`),
+  with a live count so hands-on workspace sessions are no longer buried.
+- Collapse state persists in `localStorage` (`dsx2-groups`); searching always
+  expands both groups so matches stay reachable. Collapsed groups skip row
+  rendering entirely, keeping large automation histories cheap.
+- Pinned sessions group unchanged and stays above both groups.
+
 ## 0.2.1 — 2026-09-03
 
 - Installable as a profile bundle: declare `dsh.bundle.patch` → `cordis.patch.yml`
