@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.3.3 — 2026-09-06
+
+- Fix for real: 0.3.2's re-pull could not help when the client runtime
+  re-materializes its module graph — the view then holds an orphaned list
+  store that reads the constructor-initial snapshot (`ids: 0,
+  phase: "pending"`) forever, while every pull lands in the replacement store
+  it no longer points at. The view now re-reads the live `sessions` service
+  from ctx on every refresh (`rebindSessions`), re-subscribing to the swapped
+  store when the instance changed, and re-renders explicitly once its pull
+  settles instead of waiting for a notification that never comes.
+- An empty-and-pending snapshot (the orphaned-store signature) now triggers a
+  throttled heal (4 s) right from `renderList`, so recovery also runs while
+  the page sits in the affected state, not only on the next trigger.
+- Live evidence for the failure mode: with 0.3.2, a real page sat in the
+  orphaned state — pulls returned the full list (2,996 items) yet the view
+  stayed "暂无会话" until a manual reload. With 0.3.3 the same state is
+  structurally covered (rebind + throttled heal + explicit re-render); the
+  swap itself could not be reproduced on demand, so the heal path is locked
+  by wiring tests and the healthy path (boot, occlusion cycle, wake, tab
+  switch) is verified live in the real GUI.
+
 ## 0.3.2 — 2026-09-05
 
 - Fix: sessions created after the page loaded (dsh CLI runs, automation

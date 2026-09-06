@@ -50,6 +50,9 @@ window.__ModuleLoader__.load({
 		let unsub2 = null;
 		let refreshTicker = null;
 		let onVisible = null;
+		let ctxRef = null;
+		let lastHealAt = 0;
+		let renderQueued = false;
 		let resizer = null;
 		let menuEl = null;
 		let wsMenuObserver = null;
@@ -120,8 +123,52 @@ window.__ModuleLoader__.load({
 		// stale until a reload. Re-pull the baseline ourselves — the store
 		// merge is idempotent and the pull itself is single-flight.
 		function refreshBaseline() {
-			if (disposed || sessions === undefined || typeof sessions.refresh !== "function") return;
-			try { sessions.refresh(); } catch (error) {}
+			if (disposed) return;
+			rebindSessions();
+			if (sessions === undefined || typeof sessions.refresh !== "function") return;
+			try {
+				const done = sessions.refresh();
+				// A swapped store may never notify the old subscription, so
+				// render explicitly once the pull settles instead of waiting.
+				if (done !== undefined && typeof done.then === "function") done.then(() => { renderList(); }, () => {});
+			} catch (error) {}
+		}
+
+		// The runtime can re-materialize its module graph and swap the sessions
+		// facade plus its list store; a view still holding the old store reads
+		// the constructor-initial snapshot (ids:0, phase:"pending") forever, and
+		// no pull ever reaches it. Re-read the live service from ctx and swap
+		// every captured reference when the instance changed.
+		function rebindSessions() {
+			if (disposed || ctxRef === null) return;
+			let live;
+			try { live = ctxRef.get("sessions"); } catch (error) { return; }
+			if (live === undefined || live === sessions) return;
+			if (unsub1 !== null) { try { unsub1(); } catch (error) {} unsub1 = null; }
+			sessions = live;
+			sList = sessions.list;
+			try { unsub1 = sList.subscribe(onData); } catch (error) {}
+		}
+
+		// The orphaned-store signature: zero ids while the store never became
+		// ready. Throttled so repeated renders during one outage fire one heal.
+		function healOrphanedStore() {
+			if (disposed) return;
+			const now = Date.now();
+			if (now - lastHealAt >= 4000) {
+				lastHealAt = now;
+				refreshBaseline();
+			}
+		}
+
+		function onData() {
+			renderPinned();
+			if (mode !== "recent" || renderQueued) return;
+			renderQueued = true;
+			window.setTimeout(() => {
+				renderQueued = false;
+				if (disposed === false && mode === "recent") renderList();
+			}, 400);
 		}
 
 		function loadPins() {
@@ -489,6 +536,7 @@ window.__ModuleLoader__.load({
 				rows.push(s);
 			}
 			rows.sort(byRecency);
+			if (rows.length === 0 && q === "" && list.ids.length === 0 && list.phase !== "ready") healOrphanedStore();
 			if (rows.length === 0) {
 				listDiv.appendChild(emptyNote(q !== "" ? "无匹配会话" : "暂无会话"));
 				return;
@@ -662,16 +710,8 @@ window.__ModuleLoader__.load({
 			// Data pushes (automation runs mutate their sessions constantly)
 			// coalesce into at most one list rebuild per window; direct user
 			// actions (tab switch, toggle, search) still render immediately.
-			let renderQueued = false;
-			const onData = () => {
-				renderPinned();
-				if (mode !== "recent" || renderQueued) return;
-				renderQueued = true;
-				window.setTimeout(() => {
-					renderQueued = false;
-					if (disposed === false && mode === "recent") renderList();
-				}, 400);
-			};
+			// onData itself lives at module scope so rebindSessions can
+			// re-subscribe the hoisted handler to a swapped store.
 			if (sList !== undefined) { try { unsub1 = sList.subscribe(onData); } catch (error) {} }
 			if (wList !== undefined) { try { unsub2 = wList.subscribe(onData); } catch (error) {} }
 			const timer = ctx.get !== undefined ? ctx.get("timer") : undefined;
@@ -710,6 +750,7 @@ window.__ModuleLoader__.load({
 			const RETRY_MAX = 75;
 			let attempts = 0;
 			let started = false;
+			ctxRef = ctx;
 			const start = () => {
 				if (started || disposed) return;
 				attempts += 1;

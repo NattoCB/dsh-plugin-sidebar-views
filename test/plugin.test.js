@@ -197,3 +197,21 @@ test("stale session baseline: the view re-pulls so cli/automation-created sessio
 	assert.ok(/refreshTicker !== null\) \{ try \{ refreshTicker\(\); \} catch \(error\) \{\}\s*\}/.test(code), "the ticker must be disposed on cleanup");
 	assert.ok(/removeEventListener\("visibilitychange", onVisible\)/.test(code), "the wake listener must be removed on cleanup");
 });
+
+test("service rebind: a rebuilt client-runtime instance must not orphan the view on an empty store", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	// The client runtime can re-materialize its module graph and swap the
+	// sessions facade + list store; a view holding the old store then reads
+	// the constructor-initial snapshot (ids:0, phase:"pending") forever.
+	assert.ok(/function rebindSessions\(\)/.test(code), "a rebindSessions helper must exist");
+	assert.ok(/ctxRef\.get\("sessions"\)/.test(code), "rebind must re-read the live service from ctx");
+	assert.ok(/sList = sessions\.list;/.test(code), "rebind must swap the list store reference");
+	assert.ok(/unsub1 = sList\.subscribe\(onData\);/.test(code), "rebind must re-subscribe to the new store");
+	assert.ok(/rebindSessions\(\);\n(\t+)if \(sessions === undefined \|\| typeof sessions\.refresh !== "function"\) return;/.test(code), "refreshBaseline must rebind before pulling");
+	// The empty-and-pending snapshot must trigger a heal attempt, not just render an empty note.
+	assert.ok(/ids\.length === 0 && list\.phase !== "ready"/.test(code), "renderList must detect the orphaned-store signature");
+	assert.ok(/healOrphanedStore\(\)/.test(code), "the orphaned-store signature must trigger healOrphanedStore");
+	assert.ok(/now - lastHealAt >= 4000/.test(code), "heal attempts must be throttled");
+	// After a refresh completes, render explicitly — a swapped store may never notify the old subscription.
+	assert.ok(/\.then\(\(\) => \{ renderList\(\); \}/.test(code), "refreshBaseline must re-render when its pull settles");
+});
