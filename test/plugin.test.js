@@ -249,3 +249,28 @@ test("service rebind: a rebuilt client-runtime instance must not orphan the view
 	// After a refresh completes, render explicitly — a swapped store may never notify the old subscription.
 	assert.ok(/\.then\(\(\) => \{ renderList\(\); \}/.test(code), "refreshBaseline must re-render when its pull settles");
 });
+
+test("native session menus gain a copy-session-id item", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	assert.ok(/function findSessionId\(/.test(code), "a session-menu fiber resolver must exist");
+	assert.ok(/id\.indexOf\("session-"\) === 0/.test(code), "the resolver must anchor on session- ids only");
+	assert.ok(/dsx2-sid-item/.test(code), "the injected item must carry a marker class");
+	assert.ok(/"复制 Session ID"/.test(code), "the injected label must match the sidebar row menu wording");
+	assert.ok(/copyText\(sid\)/.test(code), "the injected item must copy the resolved session id");
+	assert.ok(/dismissNativeMenu\(\)/.test(code), "menu dismissal must go through the shared helper");
+});
+
+test("the finder item renders above destructive rows in the workspace menu", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	assert.ok(/danger\.parentNode\.insertBefore\(item, danger\)/.test(code), "the finder item must insert beside the danger row inside its own parent");
+	assert.ok(/\/\(\^\|\[\\s_-\]\)danger\/i\.test\(mi\.className\)/.test(code), "danger rows must be detected by class");
+});
+
+test("injected native-menu items survive react re-renders of the open menu", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	assert.ok(/function watchMenuPortals\(\)/.test(code), "a menu portal watcher must exist");
+	assert.ok(/new MutationObserver\(\(\) => scheduleWorkspaceScan\(\)\)/.test(code), "portal mutations must reschedule the scan");
+	assert.ok(/menuFixObserver\.disconnect\(\)/.test(code).valueOf() && /watchMenuPortals\(\);\s*\n\t\t\}/.test(code), "enhance must arm the portal watcher");
+	assert.ok(/if \(menuFixObserver !== null\) \{ try \{ menuFixObserver\.disconnect\(\); \} catch \(error\) \{\} menuFixObserver = null; \}/.test(code), "cleanup must disconnect the portal watcher");
+	assert.ok(/querySelector\("\." \+ markerClass\)/.test(code), "re-injection must be guarded by the marker class");
+});

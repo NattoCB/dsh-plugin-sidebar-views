@@ -351,48 +351,112 @@ window.__ModuleLoader__.load({
 			return undefined;
 		}
 
+		// Session id for a native session menu: the portal menu's fiber chain
+		// crosses SessionNodeItem, whose props.node carries the session.
+		function findSessionId(el) {
+			const fk = Object.keys(el).find((k) => k.startsWith("__reactFiber$"));
+			if (fk === undefined) return undefined;
+			let f = el[fk];
+			let hops = 0;
+			while (f !== null && f !== undefined && hops < 30) {
+				const p = f.memoizedProps;
+				if (p !== null && typeof p === "object" && p.node !== null && typeof p.node === "object") {
+					const id = p.node.id;
+					if (typeof id === "string" && id.indexOf("session-") === 0) return id;
+				}
+				f = f.return;
+				hops += 1;
+			}
+			return undefined;
+		}
+
 		// Folder glyph for the Finder item, drawn in the native icon style
 		// (16x16, stroke inherits the item color).
 		const FOLDER_SVG_PATH = '<path d="M1.75 4.6c0-1.05.85-1.9 1.9-1.9h2.5c.5 0 .98.2 1.34.55l.86.85h3.9c1.05 0 1.9.85 1.9 1.9v5.3c0 1.05-.85 1.9-1.9 1.9H3.65c-1.05 0-1.9-.85-1.9-1.9V4.6z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>';
 
-		function enhanceWorkspaceMenus() {
-			if (workspaces === undefined || typeof workspaces.openPath !== "function") return;
-			for (const menu of document.querySelectorAll('[role="menu"]')) {
-				if (menu.querySelector(".dsx2-finder-item") !== null) continue;
-				const cwd = findWorkspaceCwd(menu);
-				if (cwd === undefined) continue;
-				const items = Array.from(menu.querySelectorAll('[role="menuitem"]'));
-				if (items.length === 0) continue;
-				// Clone a plain (non-danger) item so color and structure match the
-				// regular rows; the danger row renders red.
-				const plain = items.find((mi) => !/(^|[\s_-])danger/i.test(mi.className)) || items[0];
-				const item = plain.cloneNode(true);
-				item.removeAttribute("data-disabled");
-				item.setAttribute("aria-disabled", "false");
-				item.classList.add("dsx2-finder-item");
-				item.classList.remove(...Array.from(item.classList).filter((c) => /danger/i.test(c)));
-				// Keep the icon-span structure, swap the glyph for a folder, then
-				// re-append our label after it.
-				const iconSpan = item.querySelector("span");
-				const label = document.createTextNode("在 Finder 中打开");
-				item.textContent = "";
-				if (iconSpan !== null) {
-					const svg = iconSpan.querySelector("svg");
-					if (svg !== null) {
-						svg.setAttribute("viewBox", "0 0 16 16");
-						svg.innerHTML = FOLDER_SVG_PATH;
-					}
-					item.appendChild(iconSpan);
+		// Copy glyph in the same native icon style.
+		const COPY_SVG_PATH = '<rect x="5.4" y="5.4" width="7.8" height="7.8" rx="1.6" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M10.6 3.2H4.4c-1 0-1.8.8-1.8 1.8v6.2" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round"/>';
+
+		// Build a native-looking menu item by cloning an existing one and
+		// swapping the icon glyph and label.
+		function buildMenuItem(menu, markerClass, svgPath, label) {
+			if (menu.querySelector("." + markerClass) !== null) return null;
+			const items = Array.from(menu.querySelectorAll('[role="menuitem"]'));
+			if (items.length === 0) return null;
+			const plain = items.find((mi) => !/(^|[\s_-])danger/i.test(mi.className)) || items[0];
+			const item = plain.cloneNode(true);
+			item.removeAttribute("data-disabled");
+			item.setAttribute("aria-disabled", "false");
+			item.classList.add(markerClass);
+			item.classList.remove(...Array.from(item.classList).filter((c) => /danger/i.test(c)));
+			const iconSpan = item.querySelector("span");
+			const text = document.createTextNode(label);
+			item.textContent = "";
+			if (iconSpan !== null) {
+				const svg = iconSpan.querySelector("svg");
+				if (svg !== null) {
+					svg.setAttribute("viewBox", "0 0 16 16");
+					svg.innerHTML = svgPath;
 				}
-				item.appendChild(label);
-				item.addEventListener("click", (e) => {
-					e.stopPropagation();
-					// The native Menu listens for pointerdown to dismiss.
-					document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
-					try { workspaces.openPath(expandDisplayCwd(cwd, safeSnap(wList)) + "/."); } catch (error) {}
-				});
-				menu.appendChild(item);
+				item.appendChild(iconSpan);
 			}
+			item.appendChild(text);
+			return item;
+		}
+
+		function dismissNativeMenu() {
+			// The native Menu listens for pointerdown to dismiss.
+			document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+		}
+
+		// React re-renders the open menu and wipes injected items; watch the
+		// portal container and re-inject on the next scan. The marker-class
+		// guard keeps re-injection a no-op once present, so the observer and
+		// our own writes cannot feed each other.
+		let menuFixObserver = null;
+		function watchMenuPortals() {
+			if (menuFixObserver !== null) { menuFixObserver.disconnect(); menuFixObserver = null; }
+			const menu = document.querySelector('[role="menu"]');
+			if (menu === null) return;
+			menuFixObserver = new MutationObserver(() => scheduleWorkspaceScan());
+			menuFixObserver.observe(menu, { childList: true, subtree: true });
+		}
+
+		function enhanceWorkspaceMenus() {
+			for (const menu of document.querySelectorAll('[role="menu"]')) {
+				const cwd = findWorkspaceCwd(menu);
+				if (cwd !== undefined) {
+					if (workspaces !== undefined && typeof workspaces.openPath === "function") {
+						const item = buildMenuItem(menu, "dsx2-finder-item", FOLDER_SVG_PATH, "在 Finder 中打开");
+						if (item === null) continue;
+						item.addEventListener("click", (e) => {
+							e.stopPropagation();
+							dismissNativeMenu();
+							try { workspaces.openPath(expandDisplayCwd(cwd, safeSnap(wList)) + "/."); } catch (error) {}
+						});
+						// Destructive rows (删除 workspace) render last; keep the
+						// Finder entry above them so a stray click cannot delete. Items
+						// may be nested in wrapper nodes, so insert beside the danger
+						// row inside its own parent, not at the menu root.
+						const danger = Array.from(menu.querySelectorAll('[role="menuitem"]')).find((mi) => /(^|[\s_-])danger/i.test(mi.className));
+						if (danger !== undefined) danger.parentNode.insertBefore(item, danger);
+						else menu.appendChild(item);
+					}
+					continue;
+				}
+				const sid = findSessionId(menu);
+				if (sid !== undefined) {
+					const item = buildMenuItem(menu, "dsx2-sid-item", COPY_SVG_PATH, "复制 Session ID");
+					if (item === null) continue;
+					item.addEventListener("click", (e) => {
+						e.stopPropagation();
+						dismissNativeMenu();
+						copyText(sid);
+					});
+					menu.appendChild(item);
+				}
+			}
+			watchMenuPortals();
 		}
 
 		// The native menu's cwd prop is a display spelling (the host abbreviates
@@ -755,6 +819,7 @@ window.__ModuleLoader__.load({
 			if (onVisible !== null) { document.removeEventListener("visibilitychange", onVisible); onVisible = null; }
 			if (resizer !== null) { try { resizer.disconnect(); } catch (error) {} }
 			if (wsMenuObserver !== null) { try { wsMenuObserver.disconnect(); } catch (error) {} wsMenuObserver = null; }
+			if (menuFixObserver !== null) { try { menuFixObserver.disconnect(); } catch (error) {} menuFixObserver = null; }
 			if (hostDiv !== null && hostDiv.parentElement !== null) hostDiv.parentElement.removeChild(hostDiv);
 			document.documentElement.classList.remove("dsx2-recent-on");
 		}

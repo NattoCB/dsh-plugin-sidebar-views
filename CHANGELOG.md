@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.3.5 — 2026-09-06
+
+- Fix: the native workspace menu's "在 Finder 中打开" entry rendered below
+  删除工作区 (a destructive red row), a misclick hazard Jasper called out. It
+  now inserts directly above the danger row — inside the danger row's own
+  parent, since native menu items can be nested in wrapper nodes and a menu
+  root-level insertBefore throws (silently swallowed by the scan, killing the
+  whole enhancement branch).
+- Native session menus in the 工作区 view (重命名/分叉会话/归档会话) gain a
+  复制 Session ID item, matching the sidebar row menu. The session id is
+  resolved from the open menu's React fiber chain (SessionNodeItem
+  props.node), not from DOM text.
+- Injected native-menu items now survive React re-renders of an open menu: a
+  MutationObserver on the menu portal container reschedules the scan when the
+  open menu's content mutates; the marker-class guard keeps re-injection a
+  no-op once present.
+- Live-verified in the real GUI: workspace menu order is 重命名 / 在 Finder
+  中打开 / 删除工作区, and the session menu copies the exact session id
+  (clipboard spy verified). Tests 20/20.
+
+## 0.3.4 — 2026-09-06
+
 ## 0.3.4 — 2026-09-06
 
 - Fix: the 外部调用 group membership was name-based — sessions in any
