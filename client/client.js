@@ -48,6 +48,8 @@ window.__ModuleLoader__.load({
 		let timeTicker = null;
 		let unsub1 = null;
 		let unsub2 = null;
+		let refreshTicker = null;
+		let onVisible = null;
 		let resizer = null;
 		let menuEl = null;
 		let wsMenuObserver = null;
@@ -110,6 +112,16 @@ window.__ModuleLoader__.load({
 
 		function safeSnap(source) {
 			try { return source.getSnapshot(); } catch (error) { return undefined; }
+		}
+
+		// The client runtime only pulls the full session list when the page
+		// (re)connects; sessions created afterwards by CLI or automation runs
+		// arrive through no push frame, so this view (and the native tree) stay
+		// stale until a reload. Re-pull the baseline ourselves — the store
+		// merge is idempotent and the pull itself is single-flight.
+		function refreshBaseline() {
+			if (disposed || sessions === undefined || typeof sessions.refresh !== "function") return;
+			try { sessions.refresh(); } catch (error) {}
 		}
 
 		function loadPins() {
@@ -374,7 +386,10 @@ window.__ModuleLoader__.load({
 			mode = next;
 			syncTabs();
 			applyModeClass();
-			if (mode === "recent") renderList();
+			if (mode === "recent") {
+				refreshBaseline();
+				renderList();
+			}
 		}
 
 		function emptyNote(text) {
@@ -663,7 +678,10 @@ window.__ModuleLoader__.load({
 			if (timer !== undefined) {
 				try { keepAlive = timer.interval(ensureHost, 800); } catch (error) {}
 				try { timeTicker = timer.interval(() => { if (mode === "recent") renderList(); }, 30000); } catch (error) {}
+				try { refreshTicker = timer.interval(() => { if (document.visibilityState !== "hidden") refreshBaseline(); }, 120000); } catch (error) {}
 			}
+			onVisible = () => { if (document.visibilityState !== "hidden") refreshBaseline(); };
+			document.addEventListener("visibilitychange", onVisible);
 			ensureHost();
 			migratePins();
 		}
@@ -674,8 +692,10 @@ window.__ModuleLoader__.load({
 			closeMenu();
 			if (keepAlive !== null) { try { keepAlive(); } catch (error) {} }
 			if (timeTicker !== null) { try { timeTicker(); } catch (error) {} }
+			if (refreshTicker !== null) { try { refreshTicker(); } catch (error) {} }
 			if (unsub1 !== null) { try { unsub1(); } catch (error) {} }
 			if (unsub2 !== null) { try { unsub2(); } catch (error) {} }
+			if (onVisible !== null) { document.removeEventListener("visibilitychange", onVisible); onVisible = null; }
 			if (resizer !== null) { try { resizer.disconnect(); } catch (error) {} }
 			if (wsMenuObserver !== null) { try { wsMenuObserver.disconnect(); } catch (error) {} wsMenuObserver = null; }
 			if (hostDiv !== null && hostDiv.parentElement !== null) hostDiv.parentElement.removeChild(hostDiv);

@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.3.2 — 2026-09-05
+
+- Fix: sessions created after the page loaded (dsh CLI runs, automation
+  pipelines) never showed up in 历史会话 — the client runtime only pulls the
+  full session list on (re)connect and no push frame announces externally
+  created sessions. The view now re-pulls the baseline itself: every 2 minutes
+  while the page is visible, on tab wake from a backgrounded window, and when
+  the 历史会话 tab is opened. Feature-detects `sessions.refresh`, so older
+  runtimes degrade to the old behavior.
+
+## 0.3.1 — 2026-09-05
+
+- Perf: toggling the external group no longer stutters — batch row insertion
+  via DocumentFragment, `content-visibility: auto` on the group row container,
+  per-render pin-set parsing, and a 400 ms coalescing throttle on data pushes
+  (direct interactions stay immediate).
+- Compat (with better-sidebar): the Finder menu item now expands the display
+  spelling (`~/…`) against the workspace list and appends `/.` so the folder
+  reveal gesture routes to the explorer instead of failing with ENOENT.
+
 ## 0.3.0 — 2026-09-05
 
 - Recent sessions split into two collapsible groups: 工作区 (sessions in a

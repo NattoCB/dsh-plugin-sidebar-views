@@ -185,3 +185,15 @@ test("finder menu click hands openPath an expanded folder-reveal path", () => {
 	assert.ok(code.includes("expandDisplayCwd(cwd"), "click handler must expand the display cwd before openPath");
 	assert.ok(/openPath\(expandDisplayCwd\(cwd,\s*safeSnap\(wList\)\)\s*\+\s*"\/\."\)/.test(code), "the open must carry the folder-reveal gesture suffix");
 });
+
+test("stale session baseline: the view re-pulls so cli/automation-created sessions appear without a reload", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	assert.ok(/function refreshBaseline\(\)/.test(code), "a refreshBaseline helper must exist");
+	assert.ok(/typeof sessions\.refresh !== "function"/.test(code), "the helper must feature-detect the sessions facade");
+	assert.ok(/sessions\.refresh\(\);/.test(code), "the helper must call sessions.refresh()");
+	assert.ok(/mode === "recent"\)\s*\{\s*refreshBaseline\(\);\s*renderList\(\);/.test(code), "opening the recent tab must refresh before rendering");
+	assert.ok(/timer\.interval\(\(\) => \{ if \(document\.visibilityState !== "hidden"\) refreshBaseline\(\); \}, \d+\)/.test(code), "a periodic refresh ticker must run while the page is visible");
+	assert.ok(/addEventListener\("visibilitychange", onVisible\)/.test(code), "waking a background tab must trigger a refresh");
+	assert.ok(/refreshTicker !== null\) \{ try \{ refreshTicker\(\); \} catch \(error\) \{\}\s*\}/.test(code), "the ticker must be disposed on cleanup");
+	assert.ok(/removeEventListener\("visibilitychange", onVisible\)/.test(code), "the wake listener must be removed on cleanup");
+});
