@@ -98,19 +98,53 @@ test("partitionByWorkspace treats unknown and workspace-less sessions as externa
 	assert.deepEqual(exports._partitionByWorkspace([], new Map()), { ws: [], ext: [] });
 });
 
-test("partitionByWorkspace sends Automation-* workspace sessions to the external group", () => {
+test("partitionByWorkspace keeps Automation-* workspace sessions in the workspace group; only workspace-less sessions are external", () => {
 	const exports = loadClientExports();
-	const rows = [{ id: "run-1" }, { id: "run-2" }, { id: "human-1" }];
+	const rows = [{ id: "run-1" }, { id: "run-2" }, { id: "human-1" }, { id: "headless-1" }];
 	const wsOf = new Map([
-		// title renamed away, path still betrays the automation directory
+		// membership decides — a renamed Automation workspace is still a workspace
 		["run-1", { title: "我的跑批", path: "/Volumes/x/Automation-AMV-Hourly" }],
-		// default title (directory name) marks it even if path is missing
+		// default title (directory name), no special meaning
 		["run-2", { title: "Automation-QF-Engine-Daily", path: "" }],
 		["human-1", { title: "DeepSeekHarnessWorkspace", path: "/Users/x/Desktop/DeepSeekHarnessWorkspace" }]
+		// headless-1: no entry → external
 	]);
 	const parts = exports._partitionByWorkspace(rows, wsOf);
-	assert.deepEqual(parts.ext.map((s) => s.id), ["run-1", "run-2"]);
-	assert.deepEqual(parts.ws.map((s) => s.id), ["human-1"]);
+	assert.deepEqual(parts.ws.map((s) => s.id), ["run-1", "run-2", "human-1"]);
+	assert.deepEqual(parts.ext.map((s) => s.id), ["headless-1"]);
+});
+
+test("fillWorkspaceByCwd catches sessions the workspace registry registered late", () => {
+	const exports = loadClientExports();
+	const workspaces = [
+		{ title: "AMV", path: "/Volumes/x/Automation-AMV-Hourly", sessionIds: ["registered-1"] },
+		{ title: "Home", path: "/Users/x/Desktop/DeepSeekHarnessWorkspace", sessionIds: [] }
+	];
+	const wsOf = new Map([["registered-1", workspaces[0]]]);
+	const rows = [
+		// fresh fleet run: cwd inside the automation workspace, no registry entry
+		{ id: "fresh-run", cwd: "/Volumes/x/Automation-AMV-Hourly" },
+		// nested subdir still matches the workspace prefix
+		{ id: "nested-run", cwd: "/Volumes/x/Automation-AMV-Hourly/sub/dir" },
+		// trailing slash on the workspace path must not break the match
+		{ id: "slashy", cwd: "/Users/x/Desktop/DeepSeekHarnessWorkspace" },
+		// cwd matching no workspace stays untouched (true headless)
+		{ id: "foreign", cwd: "/tmp/elsewhere" },
+		// no cwd at all stays untouched
+		{ id: "nocwd" }
+	];
+	exports._fillWorkspaceByCwd(wsOf, rows, workspaces);
+	assert.equal(wsOf.get("fresh-run"), workspaces[0]);
+	assert.equal(wsOf.get("nested-run"), workspaces[0]);
+	assert.equal(wsOf.get("slashy"), workspaces[1]);
+	assert.equal(wsOf.has("foreign"), false, "no workspace prefix match means still external");
+	assert.equal(wsOf.has("nocwd"), false);
+	assert.equal(wsOf.get("registered-1"), workspaces[0], "registry entries are never overwritten");
+	// longest prefix wins when workspaces nest
+	const nested = [{ title: "root", path: "/Volumes/x", sessionIds: [] }, { title: "leaf", path: "/Volumes/x/Automation-AMV-Hourly", sessionIds: [] }];
+	const wsOf2 = new Map();
+	exports._fillWorkspaceByCwd(wsOf2, [{ id: "r", cwd: "/Volumes/x/Automation-AMV-Hourly" }], nested);
+	assert.equal(wsOf2.get("r"), nested[1], "the most specific workspace prefix must win");
 });
 
 /** Build a fake fiber element: memoizedProps plus an optional parent. */

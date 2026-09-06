@@ -20,14 +20,16 @@
 > 一个 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 客户端插件,升级侧栏会话列表:
 > 列表上方加「工作区 / 历史会话」切换条——工作区是原生分组,历史会话把全部会话按最近排序平铺,
 > 带相对时间戳、运行状态点与所属工作区标签;固定会话分组常驻顶部。
-> 0.3.0 起历史会话再分「工作区 / 外部调用」两组,automation 流量默认折叠、实时计数。
+> 0.3.0 起历史会话再分「工作区 / 外部调用」两组,外部调用(headless 流量)默认折叠、实时计数。
+> 0.3.4 起分组只看 workspace 成员资格:`Automation-*` workspace 里的会话属「工作区」组,
+> 其最新运行直接排在工作区组顶部;注册滞后的会话按 cwd→workspace 路径前缀兜底归组。
 > 纯 DOM 实现——无 React、无 portal、不接管 slot;装进 `web` profile 重启即用。
 
 ## ✨ 功能一览
 
 - **🔀 双视图切换条**:列表上方两个 tab——「工作区」(原生 workspace 分组)与「历史会话」(全部会话按最近排序的单层平铺列表,含相对时间戳、运行中/已完成/待处理状态点、所属工作区标签)。
 - **📌 固定会话分组**:两种视图下都常驻列表顶部,实时计数、折叠状态记忆;已不存在的会话以置灰行显示,不会悄悄消失。
-- **🗂️ 工作区 / 外部调用分组**:历史会话分两组——「工作区」(挂在常规 workspace 下的会话,默认展开)在上,「外部调用」(无 workspace 的 headless 会话 + `Automation-*` workspace 会话,即 automation 流量)在下,默认折叠并显示实时计数。automation run 会挂在真实 workspace 下,按 workspace 标题或目录名 `Automation-` 前缀识别。折叠状态存 localStorage(`dsx2-groups`);搜索时强制展开两组;折叠组完全跳过行渲染,上千条 automation 历史也不建 DOM。
+- **🗂️ 工作区 / 外部调用分组**:历史会话分两组——「工作区」(挂在任意 workspace 下的会话,默认展开,按最近排序;`Automation-*` workspace 也是正常 workspace,其最新运行就在本组顶部)在上,「外部调用」(真正无 workspace 的 headless 会话,如 `dsh --profile <x>` 直连创建)在下,默认折叠并显示实时计数。host 侧 workspace 注册滞后时按会话 cwd 对 workspace 路径做最长前缀匹配兜底归组。折叠状态存 localStorage(`dsx2-groups`);搜索时强制展开两组;折叠组完全跳过行渲染,上千条 headless 历史也不建 DOM。
 - **⋯ 行级菜单**:每一行(固定组与平铺行)都有「⋯」菜单:固定 / 取消固定会话、复制 Session ID。
 - **🔎 标题过滤**:历史会话视图内置过滤框,按标题实时筛选。
 - **📁 在 Finder 中打开**:workspace 原生「…」菜单新增打开目录项,取菜单 fiber 携带的 workspace cwd,经宿主 `workspaces.openPath` 服务激活——无宿主侧代码。

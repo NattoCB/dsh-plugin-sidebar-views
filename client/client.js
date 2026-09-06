@@ -73,33 +73,49 @@ window.__ModuleLoader__.load({
 			return a.id < b.id ? -1 : 1;
 		}
 
-		// Automation-owned workspaces follow Jasper's naming convention: the
-		// workspace directory (and thus its default title) starts with
-		// "Automation-" (e.g. Automation-AMV-Hourly). Sessions in them are
-		// machine traffic even though they technically belong to a workspace.
-		function isAutomationWorkspace(w) {
-			if (w === null || typeof w !== "object") return false;
-			if (typeof w.title === "string" && w.title.indexOf("Automation-") === 0) return true;
-			if (typeof w.path === "string") {
-				const seg = w.path.split("/").pop() || "";
-				return seg.indexOf("Automation-") === 0;
-			}
-			return false;
-		}
-
 		// Split recency-sorted rows into workspace-backed and external
-		// sessions. External = no workspace membership at all (headless
-		// callers) OR membership in an Automation-* workspace (automation
-		// runs attach their sessions to their own workspace).
+		// sessions. External = created with no workspace at all (headless
+		// base requests, e.g. `dsh --profile <x>` callers). Sessions attached
+		// to any workspace are ordinary workspace sessions regardless of the
+		// workspace's name — an Automation-* workspace is still a real
+		// workspace, and its newest runs belong at the top of the workspace
+		// group (Jasper, 2026-09-06).
 		function partitionByWorkspace(rows, wsOf) {
 			const ws = [];
 			const ext = [];
 			for (const s of rows) {
 				const w = wsOf.get(s.id);
-				if (w !== undefined && isAutomationWorkspace(w) === false) ws.push(s);
+				if (w !== undefined) ws.push(s);
 				else ext.push(s);
 			}
 			return { ws: ws, ext: ext };
+		}
+
+		// The host registers sessions into workspaces late (fleet runs show up
+		// in session.list long before their workspace membership lands), so
+		// registry-only membership bounces fresh runs into the external group.
+		// Fall back to matching the session cwd against workspace paths —
+		// longest matching prefix wins, registry entries always win.
+		function fillWorkspaceByCwd(wsOf, rows, workspaces) {
+			const prefixes = [];
+			for (const w of workspaces || []) {
+				if (typeof w.path === "string" && w.path !== "") {
+					prefixes.push({ prefix: w.path.replace(/\/+$/, ""), w: w });
+				}
+			}
+			if (prefixes.length === 0) return;
+			for (const s of rows) {
+				if (wsOf.has(s.id)) continue;
+				const cwd = typeof s.cwd === "string" ? s.cwd.replace(/\/+$/, "") : "";
+				if (cwd === "") continue;
+				let best = null;
+				for (const p of prefixes) {
+					if (cwd === p.prefix || cwd.indexOf(p.prefix + "/") === 0) {
+						if (best === null || p.prefix.length > best.prefix.length) best = p;
+					}
+				}
+				if (best !== null) wsOf.set(s.id, best.w);
+			}
 		}
 
 		function loadGroupState() {
@@ -536,6 +552,7 @@ window.__ModuleLoader__.load({
 				rows.push(s);
 			}
 			rows.sort(byRecency);
+			fillWorkspaceByCwd(wsOf, rows, wlist.items);
 			if (rows.length === 0 && q === "" && list.ids.length === 0 && list.phase !== "ready") healOrphanedStore();
 			if (rows.length === 0) {
 				listDiv.appendChild(emptyNote(q !== "" ? "无匹配会话" : "暂无会话"));
@@ -774,6 +791,7 @@ window.__ModuleLoader__.load({
 		exports.inject = inject;
 		exports._mergePins = mergePins;
 		exports._partitionByWorkspace = partitionByWorkspace;
+		exports._fillWorkspaceByCwd = fillWorkspaceByCwd;
 		exports._findWorkspaceCwd = findWorkspaceCwd;
 		exports._expandDisplayCwd = expandDisplayCwd;
 		exports.apply = apply;

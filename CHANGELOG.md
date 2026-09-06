@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.3.4 — 2026-09-06
+
+- Fix: the 外部调用 group membership was name-based — sessions in any
+  workspace whose title or directory started with `Automation-` were exiled
+  to the (default-collapsed) external group, so fresh automation runs never
+  showed at the top of 历史会话 even when the data was fine. Jasper clarified
+  the intent: 外部调用 means sessions created with no workspace at all
+  (headless base requests, e.g. `dsh --profile <x>` callers), not
+  "workspaces that look automated".
+- Membership now decides: any workspace-attached session — including
+  `Automation-*` workspaces — lands in the 工作区 group, recency-sorted, so
+  the newest fleet run sits at the very top of the list.
+- The host registers sessions into workspaces late (2,383 AMV-cwd sessions
+  vs only 351 registered at diagnosis time), so registry-only membership
+  would bounce fresh runs back into the external group. A cwd fallback now
+  matches session cwd against workspace paths (longest prefix wins, registry
+  entries always win) and the row's workspace label benefits too.
+- Live-verified in the real GUI: 工作区 2,826 rows with the freshest
+  `Automation-AMV-Hourly` runs ("刚刚") at the absolute top; 外部调用 down to
+  the single true headless session.
+
 ## 0.3.3 — 2026-09-06
 
 - Fix for real: 0.3.2's re-pull could not help when the client runtime
