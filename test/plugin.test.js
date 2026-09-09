@@ -216,7 +216,7 @@ test("stale session baseline: the view re-pulls so cli/automation-created sessio
 	assert.ok(/function refreshBaseline\(\)/.test(code), "a refreshBaseline helper must exist");
 	assert.ok(/typeof sessions\.refresh !== "function"/.test(code), "the helper must feature-detect the sessions facade");
 	assert.ok(/sessions\.refresh\(\);/.test(code), "the helper must call sessions.refresh()");
-	assert.ok(/mode === "recent"\)\s*\{\s*refreshBaseline\(\);\s*renderList\(\);/.test(code), "opening the recent tab must refresh before rendering");
+	assert.ok(/function setMode\(next\)\s*\{\s*mode = next;\s*syncTabs\(\);\s*applyModeClass\(\);\s*refreshBaseline\(\);\s*renderList\(\);/.test(code), "opening either tab must refresh before rendering (both tabs are self-drawn)");
 	assert.ok(/timer\.interval\(\(\) => \{ if \(document\.visibilityState !== "hidden"\) refreshBaseline\(\); \}, \d+\)/.test(code), "a periodic refresh ticker must run while the page is visible");
 	assert.ok(/addEventListener\("visibilitychange", onVisible\)/.test(code), "waking a background tab must trigger a refresh");
 	assert.ok(/refreshTicker !== null\) \{ try \{ refreshTicker\(\); \} catch \(error\) \{\}\s*\}/.test(code), "the ticker must be disposed on cleanup");
@@ -315,4 +315,13 @@ test("titleOfFrame tolerates torn lines and non-title JSON", () => {
 	assert.equal(_titleOfFrame(Buffer.from('{"type":"session/title","data":{"title":"t"}}\n{"type":"other"'), "utf8"), "t");
 	assert.equal(_titleOfFrame(Buffer.from("garbage \xff\xfe bytes"), "utf8"), undefined);
 	assert.equal(_titleOfFrame(Buffer.alloc(0)), undefined);
+});
+
+test("workspaces tab renders self-drawn per-workspace groups with paging and pin menu", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	assert.ok(/classList\.toggle\("dsx2-ws-on", on && mode === "workspaces"\)/.test(code), "the workspaces tab hides the native tree via the ws-on class");
+	assert.ok(/mode === "workspaces"\) \{[\s\S]*?byWs/.test(code), "the row model builds one bucket per workspace in ws mode");
+	assert.ok(/buckets\.sort\(\(a, b\) => b\.latest - a\.latest\)/.test(code), "workspaces sort by their newest session");
+	assert.ok(/b\.key === "w:ext"/.test(code), "the external bucket always renders last");
+	assert.ok(/groupList !== null\s*\?\s*groupList\.map\(\(g\) => \(\{ key: g\.key/.test(code), "ws mode renders one collapsible group per workspace (native 展开其余 N is gone)");
 });

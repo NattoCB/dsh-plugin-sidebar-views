@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.8 — 2026-09-09
+
+- The workspaces tab now renders through the same self-drawn list as the
+  history tab: one collapsible group per workspace (newest workspace first,
+  external callers last), 5 rows per page with 展开更多 5 个会话, search,
+  relative times, and the row menu (固定会话/取消固定/复制 Session ID/
+  重命名/归档 actions) — features the native tree could not offer. The
+  native tree's 展开其余 N 个会话 expands a whole group in one shot
+  (boolean expansion state in dsh-client-ui-workspace, no progressive
+  limit to tune), so with hundreds of sessions per workspace the takeover
+  was the only way to honor the 5-at-a-time requirement. The native tree
+  stays hidden under html.dsx2-ws-on; recent-tab behavior is unchanged.
+- Pin actions verified end-to-end in the workspaces tab: 未 pin 行菜单
+  固定会话 → count 9→10 → 取消固定 → 9. Tests 27/27.
+
 ## 0.3.7 — 2026-09-09
 
 - Feature: cold-session title self-heal. session_projcache.json stopped
