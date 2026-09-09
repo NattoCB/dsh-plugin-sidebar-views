@@ -325,3 +325,13 @@ test("native session menus gain a pin item and the show-more row gains 收起", 
 	assert.ok(/dsx2-collapse-btn/.test(code), "the show-more row carries a collapse control");
 	assert.ok(/renderLimit\[key\] = RENDER_CHUNK_FIRST;/.test(code), "collapse resets the group cap to the first page");
 });
+
+test("workspaces tab: native expanded groups are paged 5-at-a-time without replacing the tree", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	assert.ok(/const WS_PAGE = 5;/.test(code), "the native-tree page size is five");
+	assert.ok(/function applyWsCaps\(\)/.test(code), "an observer-driven cap applier exists");
+	assert.ok(/\[class\*='groupSection'\]/.test(code), "caps target the native group sections (rows keep lineage/drag/icons)");
+	assert.ok(/span\.style\.display !== want/.test(code), "row hiding is idempotent (no observer feedback loop)");
+	assert.ok(/dsx2-cap-row/.test(code), "a self-drawn 展开更多 control is injected beside the native 收起");
+	assert.ok(/btn\.textContent\.indexOf\("收起"\)/.test(code), "the native collapse button remains the way back");
+});

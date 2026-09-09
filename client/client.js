@@ -144,6 +144,87 @@ window.__ModuleLoader__.load({
 			}).catch(() => {});
 		}
 
+		// ── workspaces tab: page the native tree's expanded groups ─────────
+		// The native "展开其余 N 个会话" expands a whole group in one shot
+		// (boolean expansion state — no progressive limit to tune). Rather than
+		// replacing the tree (0.3.8's mistake), an observer caps freshly expanded
+		// groups: rows beyond the cap are hidden inline (the native rows keep
+		// their lineage indentation, drag order and icons), and a self-drawn
+		// "展开更多 5 个会话" control grows the cap one page at a time. The
+		// native 收起 button stays as the way back to the collapsed 5-row page.
+		const WS_PAGE = 5;
+		const wsCaps = new Map(); // group title → visible row cap
+		let wsTreeObserver = null;
+		
+		function applyWsCaps() {
+			if (disposed || document.documentElement.classList.contains("dsx2-recent-on")) return;
+			const host0 = document.querySelector(".dsx2-host");
+			if (host0 === null || host0.getBoundingClientRect().width < 100) return;
+			const tree = document.querySelector("[role=\"tree\"]");
+			if (tree === null) return;
+			for (const sec of tree.querySelectorAll("[class*='groupSection']")) {
+				const header = sec.querySelector(":scope > span [role=\"treeitem\"][aria-expanded]");
+				const btn = sec.querySelector(":scope > button");
+				if (header === null || btn === null) continue;
+				const title = header.textContent.trim();
+				if (btn.textContent.indexOf("收起") === -1) {
+					// collapsed page (5 rows + 展开其余): drop any leftover control and reset
+					const stale = sec.querySelector(":scope > .dsx2-cap-row");
+					if (stale !== null) stale.remove();
+					if (wsCaps.has(title)) wsCaps.delete(title);
+					continue;
+				}
+				const rows = Array.from(sec.children).filter((c) => c.tagName === "SPAN" && c !== header.parentElement && c.querySelector("[role=\"treeitem\"][aria-selected]"));
+				const total = rows.length;
+				if (total <= 5) continue;
+				const cap = Math.min(wsCaps.has(title) ? wsCaps.get(title) : WS_PAGE * 2, total);
+				wsCaps.set(title, cap);
+				rows.forEach((span, i) => {
+					const want = i < cap ? "" : "none";
+					if (span.style.display !== want) span.style.display = want;
+				});
+				let ctrl = sec.querySelector(":scope > .dsx2-cap-row");
+				if (ctrl === null) {
+					ctrl = document.createElement("div");
+					ctrl.className = "dsx2-more-row dsx2-cap-row";
+					const more = document.createElement("button");
+					more.type = "button";
+					more.className = "dsx2-more-btn";
+					more.addEventListener("click", () => {
+						wsCaps.set(title, Math.min(total, cap + WS_PAGE));
+						applyWsCaps();
+					});
+					ctrl.appendChild(more);
+					btn.parentNode.insertBefore(ctrl, btn);
+				}
+				const more = ctrl.firstElementChild;
+				const remaining = total - cap;
+				more.style.display = remaining > 0 ? "" : "none";
+				if (remaining > 0) more.textContent = "展开更多 " + Math.min(WS_PAGE, remaining) + " 个会话";
+			}
+		}
+		
+		// The page mutates constantly (chat stream, tool rows, AMV traffic), so the
+// body-level observer must debounce through one timer and exit fast when no
+// tree exists — a per-mutation full scan would burn CPU all day.
+		let wsCapScheduled = false;
+		function scheduleWsCaps() {
+			if (wsCapScheduled) return;
+			wsCapScheduled = true;
+			window.setTimeout(() => {
+				wsCapScheduled = false;
+				try { applyWsCaps(); } catch (error) {}
+			}, 150);
+		}
+		
+		function ensureWsTreeObserver() {
+			if (wsTreeObserver !== null) return;
+			wsTreeObserver = new MutationObserver(scheduleWsCaps);
+			// body-level: survives tree remounts; style writes we make are not
+			// observed (childList only) and the marker class keeps re-injection a no-op.
+			wsTreeObserver.observe(document.body, { childList: true, subtree: true });
+		}
+		
 		// ── helpers ────────────────────────────────────────────────────────
 		function relTime(ts, now) {
 			const diff = Math.max(0, now - ts);
@@ -998,6 +1079,7 @@ window.__ModuleLoader__.load({
 			if (menuFixObserver !== null) { try { menuFixObserver.disconnect(); } catch (error) {} menuFixObserver = null; }
 			if (hostDiv !== null && hostDiv.parentElement !== null) hostDiv.parentElement.removeChild(hostDiv);
 			document.documentElement.classList.remove("dsx2-recent-on");
+			if (wsTreeObserver !== null) { wsTreeObserver.disconnect(); wsTreeObserver = null; }
 		}
 
 		// A page opened during the host's own startup window can run apply()
@@ -1025,6 +1107,8 @@ window.__ModuleLoader__.load({
 				ctx.effect(() => cleanup);
 				mount(ctx);
 				watchWorkspaceMenus();
+			ensureWsTreeObserver();
+			applyWsCaps();
 			};
 			start();
 		}
