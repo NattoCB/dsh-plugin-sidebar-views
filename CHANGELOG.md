@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.3.14 — 2026-09-09
+
+- Reverted 0.3.13 (hiding 收起 on fully folded workspaces): it broke
+  re-expanding from the folded state. Back to 0.3.12 behavior — the
+  收起 button stays visible on a folded workspace and unfolding works.
+
+## 0.3.13 — 2026-09-09
+
+- A fully folded workspace no longer shows the 收起 button (it would be
+  a no-op there). REVERTED in 0.3.14: it broke unfolding.
+
+## 0.3.12 — 2026-09-09
+
+- A group whose collapsed page already holds every session shows nothing
+  but 收起 — the phantom 展开其余 5 个会话 is gone. The real remaining
+  count is read from the native label (the DOM only ever holds the first
+  5 rows). Tests 30/30.
+
+## 0.3.11 — 2026-09-09
+
+- Every workspace group shows 「展开其余 5 个会话 | 收起」 in its default
+  state; the native overflow button (展开其余 165 个会话) can no longer
+  appear — display:none!important via a hash-independent CSS rule, so
+  React rebuilds cannot flash it back. 收起 folds the workspace to its
+  header row. Injection hardened: sweep React-torn orphan controls,
+  reuse the surviving row, compare-first writes (settled tree = zero
+  mutations). Tests 29/29.
+
+## 0.3.10 — 2026-09-09
+
+- The native tree's expanded groups are capped to the first page with an
+  展开更多 5 个会话 control; native rows keep lineage indentation, drag
+  order and icons. Idempotent writes + a debounced body-level observer
+  (an undebounced first draft scanned on every mutation and burned a CPU
+  core — fixed before shipping). Tests 28/28.
+
+## 0.3.9 — 2026-09-09
+
+- Reverted 0.3.8's takeover of the workspaces tab: it replaced the native
+  tree wholesale and lost lineage indentation, workspace drag-order and
+  per-workspace icons. Pin reaches the native session menu through the
+  same DOM-injection channel as 复制 Session ID (固定会话/取消固定,
+  label reflecting live pin state). findSessionId anchors on both id
+  shapes (session-<uuid> and dsh-automation-session-<uuid>). The show-more
+  row in the history tab gained a 收起 control. Tests 27/27.
+
+## 0.3.8 — 2026-09-09
+
+- (SUPERSEDED — taken over the workspaces tab with a self-drawn group
+  list; reverted in 0.3.9 as overreach.)
+
 ## 0.3.7 — 2026-09-09
 
 - Feature: cold-session title self-heal. session_projcache.json stopped
