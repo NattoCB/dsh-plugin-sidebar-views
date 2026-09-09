@@ -70,6 +70,69 @@ window.__ModuleLoader__.load({
 		let lastRenderFp = "";
 		let renderLimit = { ws: RENDER_CHUNK_FIRST, ext: RENDER_CHUNK_FIRST };
 
+		// ── cold-session title self-heal (host index, 2026-09-09) ─────────
+		// session_projcache.json stopped gaining rows on 2026-08-31, so
+		// sessions created after that ship no `title` projection and every
+		// row shows the workspace basename until opened. The host half serves
+		// GET /sidebar-views/titles (persisted index built from the logs'
+		// session/title events); the client injects missing titles into the
+		// client-side projection stores, which feeds BOTH this view and the
+		// native workspace tree through the normal summary path.
+		let titleMap = null; // Map<sessionId, title> from the host index
+		let titleInjected = new Set(); // ids already resolved or known-missing
+		let titleRetries = 0;
+		const TITLE_RETRY_MAX = 20;
+		let titleVersion = 0; // bumps per applied title so the render fingerprint sees it
+
+		function injectTitles() {
+			if (titleMap === null || titleMap.size === 0) return;
+			if (sessions === undefined || typeof sessions.projectionStore !== "function") return;
+			const list = sList !== undefined ? safeSnap(sList) : undefined;
+			if (list === undefined || list.ids === undefined) return;
+			const byId = list.byId || {};
+			for (const id of list.ids) {
+				if (titleInjected.has(id)) continue;
+				const s = byId[id];
+				if (s === undefined) { titleInjected.add(id); continue; }
+				if (s.title !== undefined && s.title !== "") { titleInjected.add(id); continue; }
+				const t = titleMap.get(id);
+				if (t === undefined || t === "") continue; // not in index — retry after next fetch
+				try {
+					const store = sessions.projectionStore(id);
+					// Only fill a MISSING title; an existing row (host projection
+					// or rename push) stays authoritative via the seq watermark.
+					if (store !== undefined && store.get !== undefined && store.get("title") === undefined && typeof store.apply === "function") {
+						store.apply("title", String(t), 1);
+						titleVersion += 1;
+					}
+				} catch (error) {}
+				titleInjected.add(id);
+			}
+		}
+
+		function loadTitles() {
+			if (disposed) return;
+			fetch("/sidebar-views/titles").then((r) => (r.ok ? r.json() : null)).then((body) => {
+				if (disposed || body === null || typeof body !== "object") return;
+				const titles = body.titles !== null && typeof body.titles === "object" ? body.titles : {};
+				titleMap = new Map(Object.entries(titles));
+				// A completed index is authoritative for this pass: anything it
+				// does not cover (blank/never-named sessions) is marked so the
+				// per-data-tick scan stays O(new ids). A building response keeps
+				// unknown ids retryable until the final fetch below.
+				if (body.building !== true) {
+					const ids = (sList !== undefined ? safeSnap(sList) : undefined)?.ids || [];
+					for (const id of ids) if (titleMap.has(id) === false) titleInjected.add(id);
+				}
+				injectTitles();
+				renderList();
+				if (body.building === true && titleRetries < TITLE_RETRY_MAX) {
+					titleRetries += 1;
+					window.setTimeout(loadTitles, 3000);
+				}
+			}).catch(() => {});
+		}
+
 		// ── helpers ────────────────────────────────────────────────────────
 		function relTime(ts, now) {
 			const diff = Math.max(0, now - ts);
@@ -198,6 +261,7 @@ window.__ModuleLoader__.load({
 
 		function onData() {
 			renderPinned();
+			injectTitles();
 			if (mode !== "recent" || renderQueued) return;
 			renderQueued = true;
 			window.setTimeout(() => {
@@ -619,7 +683,7 @@ window.__ModuleLoader__.load({
 			const head = ids.length > 0 ? ids[0] : "";
 			const tail = ids.length > 0 ? ids[ids.length - 1] : "";
 			const wsShape = (wlist.items || []).map((w) => w.workspaceId + ":" + ((w.sessionIds || []).length) + ":" + (w.archivedSessionIds || []).length).join("|");
-			return ids.length + "~" + head + "~" + tail + "~" + String(list.current) + "~" + String(list.phase) + "~" + filter + "~" + wsShape;
+			return ids.length + "~" + head + "~" + tail + "~" + String(list.current) + "~" + String(list.phase) + "~" + filter + "~" + wsShape + "~tv" + titleVersion;
 		}
 
 		// "Show remaining N" — grows one group's cap and rebuilds the list.
@@ -885,6 +949,7 @@ window.__ModuleLoader__.load({
 			onVisible = () => { if (document.visibilityState !== "hidden") refreshBaseline(); };
 			document.addEventListener("visibilitychange", onVisible);
 			ensureHost();
+			loadTitles();
 			migratePins();
 		}
 

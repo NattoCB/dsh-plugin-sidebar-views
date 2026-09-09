@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.3.7 — 2026-09-09
+
+- Feature: cold-session title self-heal. session_projcache.json stopped
+  gaining rows on 2026-08-31 (host-side write path, upstream bug #2945
+  family), so every session created after that date showed the workspace
+  directory basename in the sidebar until it was opened. The host half now
+  serves GET /sidebar-views/titles: a persistent {sessionId: title} index
+  built from the session logs' own session/title events (frame-level zstd
+  scan + decode, ≤8 frames / 16MB per log, last rename wins). The index
+  persists at ~/.dsh/storages/sidebar-views/title-index.json; rebuilds are
+  single-flight, incremental by mtime (~2.4ms per changed log, measured) and
+  run in background — requests return the cached table immediately with
+  building:true while the first cold build runs (~2s for 832 logs).
+- The client fetches the index on mount and injects MISSING titles into the
+  client-side projection stores (projectionStore(id).apply("title", t, 1)),
+  which feeds both the sidebar-views rows AND the native workspace tree
+  through the normal buildListSnapshot path — real names appear right after
+  a reload, no clicking required. Existing rows are never overwritten: the
+  seq watermark keeps host projections and rename pushes authoritative, and
+  blank/never-named sessions keep their 新会话/basename fallback.
+- Render cache integration: every applied title bumps a titleVersion that
+  participates in the rows fingerprint, so healed titles repaint without
+  violating the 0.3.6 skip logic.
+- Host half changed → requires one dsh web restart to mount the route; the
+  client degrades silently (fetch 404 → no-op) until then. Tests 25/25.
+
 ## 0.3.6 — 2026-09-09
 
 - Perf: the sidebar list no longer rebuilds the entire DOM per render at

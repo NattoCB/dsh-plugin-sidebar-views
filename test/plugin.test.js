@@ -274,3 +274,54 @@ test("injected native-menu items survive react re-renders of the open menu", () 
 	assert.ok(/if \(menuFixObserver !== null\) \{ try \{ menuFixObserver\.disconnect\(\); \} catch \(error\) \{\} menuFixObserver = null; \}/.test(code), "cleanup must disconnect the portal watcher");
 	assert.ok(/querySelector\("\." \+ markerClass\)/.test(code), "re-injection must be guarded by the marker class");
 });
+
+// ── host half: cold-session title index (v0.3.7) ─────────────────────────
+
+import { zstdCompressSync, zstdDecompressSync } from "node:zlib";
+import { _scanFrames, _extractTitle, _titleOfFrame } from "../src/index.js";
+
+/** Build the concatenated-frame container the persistence backend writes. */
+function container(frames) {
+	return Buffer.concat(frames.map((text) => zstdCompressSync(Buffer.from(text, "utf8"))));
+}
+
+test("scanFrames locates every complete frame in a multi-frame container", () => {
+	const buf = container(["line-one\n", "line-two\n", "line-three\n"]);
+	const frames = _scanFrames(buf, 8);
+	assert.equal(frames.length, 3);
+	assert.deepEqual(frames.map((f) => f.end - f.start < buf.length), [true, true, true]);
+	// concatenated decode must reproduce the full text
+	const text = frames.map((f) => buf.subarray(f.start, f.end)).map((b) => zstdDecompressSync(b).toString("utf8")).join("");
+	assert.equal(text, "line-one\nline-two\nline-three\n");
+});
+
+test("scanFrames caps at maxFrames and skips torn tails", () => {
+	const full = container(["aaa\n", "bbb\n"]);
+	const torn = full.subarray(0, full.length - 4); // cut inside the last frame
+	const frames = _scanFrames(torn, 8);
+	assert.ok(frames.length >= 1 && frames.length < 2, "only complete frames count");
+	assert.equal(_scanFrames(full, 1).length, 1, "maxFrames caps the scan");
+});
+
+test("extractTitle reads the session/title event and prefers the last rename", () => {
+	const header = JSON.stringify({ type: "session", seq: 0, data: { id: "session-x" } }) + "\n";
+	const named = JSON.stringify({ type: "session/title", seq: 4, data: { title: "第一版标题" } }) + "\n";
+	const filler = JSON.stringify({ type: "session/stats", seq: 5 }) + "\n";
+	const renamed = JSON.stringify({ type: "session/title", seq: 9, data: { title: "重命名后" } }) + "\n";
+	assert.equal(_extractTitle(container([header, named, filler])), "第一版标题");
+	assert.equal(_extractTitle(container([header, named, filler, renamed])), "重命名后");
+});
+
+test("extractTitle returns undefined for logs without a title event", () => {
+	const header = JSON.stringify({ type: "session", seq: 0, data: { id: "session-y" } }) + "\n";
+	const filler = JSON.stringify({ type: "session/stats", seq: 1 }) + "\n";
+	assert.equal(_extractTitle(container([header, filler])), undefined);
+	assert.equal(_extractTitle(Buffer.alloc(0)), undefined);
+	assert.equal(_extractTitle(Buffer.from("not zstd at all")), undefined);
+});
+
+test("titleOfFrame tolerates torn lines and non-title JSON", () => {
+	assert.equal(_titleOfFrame(Buffer.from('{"type":"session/title","data":{"title":"t"}}\n{"type":"other"'), "utf8"), "t");
+	assert.equal(_titleOfFrame(Buffer.from("garbage \xff\xfe bytes"), "utf8"), undefined);
+	assert.equal(_titleOfFrame(Buffer.alloc(0)), undefined);
+});
