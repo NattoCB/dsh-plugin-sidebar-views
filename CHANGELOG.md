@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.16 — 2026-09-09
+
+- State machine rebuilt around the native tree's actual four shapes
+  (preview / expanded / folded-to-header / empty). Folding now always
+  goes through the group header click — React's own toggle — so a folded
+  group re-expands cleanly from the header with no stale state hiding it
+  again (the cap-0 mechanism that fought React's folded shape and caused
+  "展开的瞬间又被收起" is gone). Empty/folded shapes render no controls.
+  Full transition matrix GUI-verified: C→A→B→page→C. Tests 33/33.
+
 ## 0.3.15 — 2026-09-09
 
 - Re-lands 0.3.13's intent with the reverse path actually verified: a

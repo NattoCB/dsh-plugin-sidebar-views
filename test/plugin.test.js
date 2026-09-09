@@ -335,10 +335,8 @@ test("workspaces tab: groups page 5-at-a-time with a fold control; the 165-count
 	assert.ok(/dsx2-cap-row/.test(code), "a self-drawn control row is injected per group");
 	// the two-button control row: page forward + fold
 	assert.ok(/"\\u5c55\\u5f00\\u66f4\\u591a " \+ Math\.min\(WS_PAGE, remaining\)/.test(code), "expanded groups show 展开更多 5 个会话");
-	assert.ok(/"\\u5c55\\u5f00\\u5176\\u4f59 5 \\u4e2a\\u4f1a\\u8bdd"/.test(code), "folded-to-header state offers 展开其余 5 个会话");
-	assert.ok(/fold\.textContent = "\\u6536\\u8d77"/.test(code), "every group gets a 收起 control");
-	assert.ok(/wsCaps\.set\(title, 0\)/.test(code), "收起 folds the workspace to its header row (cap 0)");
-	// the native overflow button is dead CSS-wise — the raw count can never show
+		assert.ok(/fold\.textContent = "\\u6536\\u8d77"/.test(code), "every group gets a 收起 control");
+		// the native overflow button is dead CSS-wise — the raw count can never show
 	assert.ok(/\[class\*=\'sessionOverflow\'\]\{display:none!important\}/.test(code), "the native 展开其余 165 个会话 button is hidden by CSS (rebuild-proof)");
 });
 
@@ -360,5 +358,16 @@ test("a 5-row group shows only 收起 — no phantom 展开其余 control", () =
 
 test("zero-row groups render no control row (no lone 收起 under an empty header)", () => {
 	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
-	assert.ok(/if \(total === 0 && !folded\) \{[\s\S]*?stale\.remove\(\);[\s\S]*?continue;/.test(code), "empty groups skip the control row entirely and drop any stale one");
+	assert.ok(/if \(total === 0\) \{[\s\S]*?stale\.remove\(\);[\s\S]*?continue;/.test(code), "shape C and empty groups skip the control row entirely");
+});
+
+test("re-expanding a folded workspace via the group header wins over the stale cap 0", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+		});
+
+test("four-shape state machine: folding goes through the group header, cap0 is gone", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	assert.ok(!/wsCaps\.set\(title, 0\)/.test(code), "cap-0 folding is gone (it fought React's own folded shape)");
+	assert.ok(/header\.click\(\);/.test(code), "folding always goes through the group header click (React's own toggle)");
+	assert.ok(/if \(total === 0\) \{/.test(code), "shape C and empty groups render no control row");
 });

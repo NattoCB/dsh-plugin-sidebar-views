@@ -166,37 +166,28 @@ window.__ModuleLoader__.load({
 				if (header === null) continue;
 				const title = header.textContent.trim();
 				const native = sec.querySelector(":scope > button");
-				// The native overflow button (展开其余 165 个会话 / 收起) is dead
-				// CSS-wise ([class*="sessionOverflow"]{display:none!important}) —
-				// a rebuilt button cannot flash the raw count. Its React state is
-				// still what our controls drive; the label is only read, never shown.
 				const isExpanded = native !== null && native.textContent.indexOf("\u6536\u8d77") !== -1; // 收起
-				// React rebuilds this section on every data tick and our injected
-				// nodes do not survive it as a unit: the row div can be dropped
-				// while its buttons are left behind as orphans, and the native
-				// button comes back with the raw "165" label and visible. So every
-				// pass starts by sweeping ALL injected nodes, then rebuilds exactly
-				// one control row; every write is compare-first so a settled tree
-				// costs zero mutations (no observer feedback loop).
-				for (const stale of sec.querySelectorAll(":scope > .dsx2-more-btn, :scope > .dsx2-collapse-btn, .dsx2-more-btn:not(.dsx2-cap-row .dsx2-more-btn), .dsx2-collapse-btn:not(.dsx2-cap-row .dsx2-collapse-btn)")) stale.remove();
-				let ctrl = sec.querySelector(":scope > .dsx2-cap-row");
-				for (const extra of sec.querySelectorAll(".dsx2-cap-row")) if (extra !== ctrl) extra.remove();
+				// The native tree has four shapes:
+				//   A preview   aria=true,  5 rows, button 展开其余 N
+				//   B expanded  aria=true,  all rows, button 收起
+				//   C folded    aria=false, 0 rows, no button   (group header click)
+				//   empty       0 rows regardless (data pending / no sessions)
+				// We own paging (A→B via our button, +5 per click inside B) and
+				// folding always goes through the group header click — React's own
+				// path — so a folded group can always be re-opened from the header
+				// with no stale state of ours hiding it again.
 				const rows = Array.from(sec.children).filter((c) => c.tagName === "SPAN" && c !== header.parentElement && c.querySelector("[role=\"treeitem\"][aria-selected]"));
 				const total = rows.length;
-				const folded = wsCaps.get(title) === 0; // workspace folded to its header row
-				if (total === 0 && !folded) {
-					// No session rows rendered yet (data still arriving, or a truly
-					// empty group): a lone 收起 under the header is meaningless.
-					for (const stale of sec.querySelectorAll(".dsx2-cap-row, .dsx2-more-btn, .dsx2-collapse-btn")) stale.remove();
+				// Sweep our leftovers first (React rebuilds can tear them apart).
+				for (const stale of sec.querySelectorAll(":scope > .dsx2-more-btn, :scope > .dsx2-collapse-btn, .dsx2-more-btn:not(.dsx2-cap-row .dsx2-more-btn), .dsx2-collapse-btn:not(.dsx2-cap-row .dsx2-collapse-btn)")) stale.remove();
+				if (total === 0) {
+					// Shape C or empty: no rows to page, no controls to show.
+					for (const stale of sec.querySelectorAll(".dsx2-cap-row")) stale.remove();
+					if (wsCaps.has(title)) wsCaps.delete(title);
 					continue;
 				}
-				const cap = folded ? 0 : isExpanded ? Math.min(wsCaps.has(title) ? wsCaps.get(title) : WS_PAGE * 2, total) : Math.min(total, WS_PAGE);
-				if (isExpanded && !folded) wsCaps.set(title, cap);
-				rows.forEach((span, i) => {
-					const want = i < cap ? "" : "none";
-					if (span.style.display !== want) span.style.display = want;
-				});
-				// The control row: page forward + 收起 (folds the workspace).
+				let ctrl = sec.querySelector(":scope > .dsx2-cap-row");
+				for (const extra of sec.querySelectorAll(".dsx2-cap-row")) if (extra !== ctrl) extra.remove();
 				if (ctrl === null) {
 					ctrl = document.createElement("div");
 					ctrl.className = "dsx2-more-row dsx2-cap-row";
@@ -206,20 +197,17 @@ window.__ModuleLoader__.load({
 					more = document.createElement("button");
 					more.type = "button";
 					more.className = "dsx2-more-btn";
-				more.addEventListener("click", () => {
-					const n = sec.querySelector(":scope > button");
-					if (n !== null && n.textContent.indexOf("\u6536\u8d77") !== -1) {
-						// Capped expanded group: grow one page (applyWsCaps clamps).
-						const cur = wsCaps.has(title) ? wsCaps.get(title) : WS_PAGE * 2;
-						wsCaps.set(title, cur + WS_PAGE);
-						applyWsCaps();
-					} else {
-						// Folded (cap 0): re-expand through the native button.
-						wsCaps.delete(title);
-						if (n !== null && n.textContent.indexOf("\u5c55\u5f00\u5176\u4f59") === 0) n.click(); // 展开其余
-						else applyWsCaps();
-					}
-				});
+					more.addEventListener("click", () => {
+						const n = sec.querySelector(":scope > button");
+						if (n !== null && n.textContent.indexOf("\u6536\u8d77") !== -1) {
+							const cur = wsCaps.has(title) ? wsCaps.get(title) : WS_PAGE * 2;
+							wsCaps.set(title, cur + WS_PAGE);
+							applyWsCaps();
+						} else if (n !== null) {
+							n.click(); // A→B through React's own expand
+						}
+					});
+					ctrl.appendChild(more);
 				}
 				let fold = ctrl.querySelector(".dsx2-collapse-btn");
 				if (fold === null) {
@@ -227,34 +215,41 @@ window.__ModuleLoader__.load({
 					fold.type = "button";
 					fold.className = "dsx2-collapse-btn";
 					fold.textContent = "\u6536\u8d77";
+					fold.addEventListener("click", () => {
+						// Always fold through the group header (React's own toggle):
+						// B→A or A→C. The cap is dropped so nothing re-hides the
+							// preview when the user expands again.
+						wsCaps.delete(title);
+						header.click();
+					});
+					ctrl.appendChild(fold);
 				}
-				fold.addEventListener("click", () => {
-					wsCaps.set(title, 0);
-					// Flip React's expanded state too so the chevron matches.
-					const n = sec.querySelector(":scope > button");
-					if (n !== null && n.textContent.indexOf("\u6536\u8d77") !== -1) n.click();
-					applyWsCaps();
-				});
 				if (more.parentNode !== ctrl) ctrl.appendChild(more);
 				if (fold.parentNode !== ctrl) ctrl.appendChild(fold);
 				const anchor = native !== null ? native : header;
 				if (ctrl.previousElementSibling !== anchor || ctrl.nextElementSibling !== (native !== null ? native.nextSibling : null)) {
 					anchor.parentNode.insertBefore(ctrl, native !== null ? native.nextSibling : null);
 				}
-				if (folded) {
-					// Fully folded to the header row: 收起 would be a no-op there.
-					more.style.display = "";
-					fold.style.display = "none";
-					const label = "\u5c55\u5f00\u5176\u4f59 5 \u4e2a\u4f1a\u8bdd";
-					if (more.textContent !== label) more.textContent = label;
-				} else if (isExpanded) {
+				if (isExpanded) {
+					const stored = wsCaps.has(title) ? wsCaps.get(title) : 0;
+					const cap = Math.min(stored > 0 ? stored : WS_PAGE * 2, total);
+					wsCaps.set(title, cap);
+					rows.forEach((span, i) => {
+						const want = i < cap ? "" : "none";
+						if (span.style.display !== want) span.style.display = want;
+					});
 					const remaining = total - cap;
 					more.style.display = remaining > 0 ? "" : "none";
-					const label = "\u5c55\u5f00\u66f4\u591a " + Math.min(WS_PAGE, remaining) + " \u4e2a\u4f1a\u8bdd";
-					if (remaining > 0 && more.textContent !== label) more.textContent = label;
+					if (remaining > 0) {
+						const label = "\u5c55\u5f00\u66f4\u591a " + Math.min(WS_PAGE, remaining) + " \u4e2a\u4f1a\u8bdd";
+						if (more.textContent !== label) more.textContent = label;
+					}
 				} else {
-					// Collapsed native page: the DOM holds only the first 5 rows;
-					// the real remaining count lives in the (hidden) native label.
+					// Shape A: preview page. Rows stay visible; the button offers
+					// one more page if any exist.
+					rows.forEach((span) => {
+						if (span.style.display !== "") span.style.display = "";
+					});
 					let remaining = 0;
 					if (native !== null) {
 						const m = native.textContent.match(/(\d+)/);
