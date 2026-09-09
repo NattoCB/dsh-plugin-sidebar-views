@@ -6,7 +6,7 @@ window.__ModuleLoader__.load({
 		Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 
 		// ── CSS (sidebar views + pinned group + row menu) ─────────────────
-		const css = ".dsx2-host{order:-1;flex:none;display:flex;flex-direction:column;gap:6px;padding:2px 0 6px}html.dsx2-recent-on .dsx2-host,html.dsx2-ws-on .dsx2-host{flex:1 1 0;min-height:0}html.dsx2-recent-on [data-slot=\"sidebar.workspaces\"] > div > :not(.dsx2-host),html.dsx2-ws-on [data-slot=\"sidebar.workspaces\"] > div > :not(.dsx2-host){display:none!important}.dsx2-bar{display:flex;align-items:center;gap:6px;flex:none}.dsx2-tabs{display:flex;flex:1;min-width:0;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.08));border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:9px;padding:2px;gap:2px}.dsx2-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;height:24px;border:none;border-radius:7px;background:transparent;color:var(--dsw-alias-label-secondary);cursor:pointer;font-size:12px;line-height:16px;padding:0 6px;white-space:nowrap;overflow:hidden;font-family:inherit}.dsx2-tab:hover{color:var(--dsw-alias-label-primary)}.dsx2-tab-active{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary);font-weight:500}.dsx2-search{display:none;align-items:center;gap:6px;height:26px;padding:0 8px;border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:8px;color:var(--dsw-alias-label-tertiary);flex:none}html.dsx2-recent-on .dsx2-search,html.dsx2-ws-on .dsx2-search{display:flex}.dsx2-search-input{flex:1;min-width:0;border:none;outline:none;background:transparent;color:var(--dsw-alias-label-primary);font-size:12px;line-height:16px;font-family:inherit}.dsx2-search-input::placeholder{color:var(--dsw-alias-label-tertiary)}.dsx2-pinned{flex:none;display:flex;flex-direction:column;min-height:0}.dsx2-pinned-head{display:flex;align-items:center;gap:5px;height:26px;padding:0 6px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-secondary);font-size:12px;font-weight:600;user-select:none;flex:none}.dsx2-pinned-head:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12));color:var(--dsw-alias-label-primary)}.dsx2-pin-icon{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-chevron{flex:none;font-size:10px;line-height:1;color:var(--dsw-alias-label-tertiary);transition:transform .15s ease}.dsx2-chevron-closed{transform:rotate(-90deg)}.dsx2-pinned-count{flex:none;color:var(--dsw-alias-label-tertiary);font-weight:400;font-size:11px}.dsx2-pinned-rows{display:flex;flex-direction:column;max-height:150px;overflow-y:auto;padding-bottom:2px}.dsx2-pinned-closed .dsx2-pinned-rows{display:none}.dsx2-list{display:none;flex:1;min-height:0;overflow-y:auto;padding-bottom:12px}html.dsx2-recent-on .dsx2-list,html.dsx2-ws-on .dsx2-list{display:block}.dsx2-row{display:flex;align-items:center;gap:7px;height:30px;padding:0 8px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-primary);font-size:13px;user-select:none}.dsx2-row:hover{background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-row-current{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18))}.dsx2-row-dead{opacity:.45;cursor:default}.dsx2-row-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dsx2-row-pin{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-row-tag{flex:none;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--dsw-alias-label-tertiary);font-size:11px;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1));border-radius:5px;padding:1px 5px}.dsx2-row-time{flex:none;color:var(--dsw-alias-label-tertiary);font-size:11px}.dsx2-more{display:none;flex:none;width:20px;height:20px;align-items:center;justify-content:center;border:none;background:transparent;border-radius:5px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:13px;line-height:1;padding:0}.dsx2-row:hover .dsx2-more{display:inline-flex}.dsx2-more:hover{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary)}.dsx2-dot{width:7px;height:7px;border-radius:50%;flex:none}.dsx2-dot-run{background:var(--dsw-alias-state-success-primary,#22c55e);animation:dsx2-pulse 1.6s ease-in-out infinite}.dsx2-dot-done{background:var(--dsw-alias-state-success-primary,#22c55e);opacity:.55}.dsx2-dot-warn{background:var(--dsw-alias-state-warn-primary,#f59e0b)}@keyframes dsx2-pulse{0%,100%{opacity:1}50%{opacity:.35}}.dsx2-empty{color:var(--dsw-alias-label-tertiary);padding:14px 10px;font-size:12px}.dsx2-more-btn{display:block;width:calc(100% - 16px);margin:2px 8px 0 8px;height:28px;border:none;background:transparent;border-radius:8px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:12px;font-family:inherit;text-align:left;padding:0 12px 0 28px}.dsx2-more-btn:hover{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-grp-rows{content-visibility:auto;contain-intrinsic-size:auto 30px}.dsx2-grp-head{margin-top:3px}.dsx2-grp-icon{color:var(--dsw-alias-label-tertiary)}.dsx2-menu{position:fixed;z-index:9999;min-width:170px;background:var(--dsw-alias-bg-layer-1,#ffffff);border:1px solid var(--dsw-alias-border-l2,rgba(0,0,0,.12));border-radius:10px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:flex;flex-direction:column}.dsx2-menu-item{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;border:none;background:transparent;border-radius:7px;color:var(--dsw-alias-label-primary);cursor:pointer;font-size:13px;text-align:left;font-family:inherit;white-space:nowrap}.dsx2-menu-item:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12))}@media (prefers-reduced-motion:reduce){.dsx2-dot-run{animation:none}}";
+		const css = ".dsx2-host{order:-1;flex:none;display:flex;flex-direction:column;gap:6px;padding:2px 0 6px}html.dsx2-recent-on .dsx2-host{flex:1 1 0;min-height:0}html.dsx2-recent-on [data-slot=\"sidebar.workspaces\"] > div > :not(.dsx2-host){display:none!important}.dsx2-bar{display:flex;align-items:center;gap:6px;flex:none}.dsx2-tabs{display:flex;flex:1;min-width:0;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.08));border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:9px;padding:2px;gap:2px}.dsx2-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;height:24px;border:none;border-radius:7px;background:transparent;color:var(--dsw-alias-label-secondary);cursor:pointer;font-size:12px;line-height:16px;padding:0 6px;white-space:nowrap;overflow:hidden;font-family:inherit}.dsx2-tab:hover{color:var(--dsw-alias-label-primary)}.dsx2-tab-active{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary);font-weight:500}.dsx2-search{display:none;align-items:center;gap:6px;height:26px;padding:0 8px;border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:8px;color:var(--dsw-alias-label-tertiary);flex:none}html.dsx2-recent-on .dsx2-search{display:flex}.dsx2-search-input{flex:1;min-width:0;border:none;outline:none;background:transparent;color:var(--dsw-alias-label-primary);font-size:12px;line-height:16px;font-family:inherit}.dsx2-search-input::placeholder{color:var(--dsw-alias-label-tertiary)}.dsx2-pinned{flex:none;display:flex;flex-direction:column;min-height:0}.dsx2-pinned-head{display:flex;align-items:center;gap:5px;height:26px;padding:0 6px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-secondary);font-size:12px;font-weight:600;user-select:none;flex:none}.dsx2-pinned-head:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12));color:var(--dsw-alias-label-primary)}.dsx2-pin-icon{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-chevron{flex:none;font-size:10px;line-height:1;color:var(--dsw-alias-label-tertiary);transition:transform .15s ease}.dsx2-chevron-closed{transform:rotate(-90deg)}.dsx2-pinned-count{flex:none;color:var(--dsw-alias-label-tertiary);font-weight:400;font-size:11px}.dsx2-pinned-rows{display:flex;flex-direction:column;max-height:150px;overflow-y:auto;padding-bottom:2px}.dsx2-pinned-closed .dsx2-pinned-rows{display:none}.dsx2-list{display:none;flex:1;min-height:0;overflow-y:auto;padding-bottom:12px}html.dsx2-recent-on .dsx2-list{display:block}.dsx2-row{display:flex;align-items:center;gap:7px;height:30px;padding:0 8px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-primary);font-size:13px;user-select:none}.dsx2-row:hover{background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-row-current{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18))}.dsx2-row-dead{opacity:.45;cursor:default}.dsx2-row-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dsx2-row-pin{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-row-tag{flex:none;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--dsw-alias-label-tertiary);font-size:11px;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1));border-radius:5px;padding:1px 5px}.dsx2-row-time{flex:none;color:var(--dsw-alias-label-tertiary);font-size:11px}.dsx2-more{display:none;flex:none;width:20px;height:20px;align-items:center;justify-content:center;border:none;background:transparent;border-radius:5px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:13px;line-height:1;padding:0}.dsx2-row:hover .dsx2-more{display:inline-flex}.dsx2-more:hover{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary)}.dsx2-dot{width:7px;height:7px;border-radius:50%;flex:none}.dsx2-dot-run{background:var(--dsw-alias-state-success-primary,#22c55e);animation:dsx2-pulse 1.6s ease-in-out infinite}.dsx2-dot-done{background:var(--dsw-alias-state-success-primary,#22c55e);opacity:.55}.dsx2-dot-warn{background:var(--dsw-alias-state-warn-primary,#f59e0b)}@keyframes dsx2-pulse{0%,100%{opacity:1}50%{opacity:.35}}.dsx2-more-row{display:flex;align-items:center;gap:6px;margin:2px 8px 0 8px}.dsx2-more-btn{display:block;flex:1;min-width:0;height:28px;border:none;background:transparent;border-radius:8px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:12px;font-family:inherit;text-align:left;padding:0 12px 0 28px}.dsx2-more-btn:hover{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-collapse-btn{flex:none;height:28px;border:none;background:transparent;border-radius:8px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:12px;font-family:inherit;padding:0 10px}.dsx2-collapse-btn:hover{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-empty{color:var(--dsw-alias-label-tertiary);padding:14px 10px;font-size:12px}.dsx2-more-btn{display:block;width:calc(100% - 16px);margin:2px 8px 0 8px;height:28px;border:none;background:transparent;border-radius:8px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:12px;font-family:inherit;text-align:left;padding:0 12px 0 28px}.dsx2-more-btn:hover{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-grp-rows{content-visibility:auto;contain-intrinsic-size:auto 30px}.dsx2-grp-head{margin-top:3px}.dsx2-grp-icon{color:var(--dsw-alias-label-tertiary)}.dsx2-menu{position:fixed;z-index:9999;min-width:170px;background:var(--dsw-alias-bg-layer-1,#ffffff);border:1px solid var(--dsw-alias-border-l2,rgba(0,0,0,.12));border-radius:10px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:flex;flex-direction:column}.dsx2-menu-item{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;border:none;background:transparent;border-radius:7px;color:var(--dsw-alias-label-primary);cursor:pointer;font-size:13px;text-align:left;font-family:inherit;white-space:nowrap}.dsx2-menu-item:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12))}@media (prefers-reduced-motion:reduce){.dsx2-dot-run{animation:none}}";
 		const cssTagId = "dsh-plugin-sidebar-views/sidebar.css";
 		if (typeof document !== "undefined" && !document.querySelector("style[data-plugin-css=\"" + cssTagId + "\"]")) {
 			const tag = document.createElement("style");
@@ -253,7 +253,7 @@ window.__ModuleLoader__.load({
 		function onData() {
 			renderPinned();
 			injectTitles();
-			if (renderQueued) return; // both tabs are self-drawn now
+			if (mode !== "recent" || renderQueued) return;
 			renderQueued = true;
 			window.setTimeout(() => {
 				renderQueued = false;
@@ -438,7 +438,8 @@ window.__ModuleLoader__.load({
 				const p = f.memoizedProps;
 				if (p !== null && typeof p === "object" && p.node !== null && typeof p.node === "object") {
 					const id = p.node.id;
-					if (typeof id === "string" && id.indexOf("session-") === 0) return id;
+					// both id shapes: session-<uuid> and dsh-automation-session-<uuid>
+					if (typeof id === "string" && (id.indexOf("session-") === 0 || id.indexOf("dsh-automation-session-") === 0)) return id;
 				}
 				f = f.return;
 				hops += 1;
@@ -449,6 +450,9 @@ window.__ModuleLoader__.load({
 		// Folder glyph for the Finder item, drawn in the native icon style
 		// (16x16, stroke inherits the item color).
 		const FOLDER_SVG_PATH = '<path d="M1.75 4.6c0-1.05.85-1.9 1.9-1.9h2.5c.5 0 .98.2 1.34.55l.86.85h3.9c1.05 0 1.9.85 1.9 1.9v5.3c0 1.05-.85 1.9-1.9 1.9H3.65c-1.05 0-1.9-.85-1.9-1.9V4.6z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>';
+
+		// Push-pin glyph (Material push_pin path, scaled into the 16 box).
+		const PIN_SVG_PATH = '<g transform="scale(0.6667)"><path d="M16 9V4h1c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1s.45 1 1 1h1v5c0 1.66-1.34 3-3 3v2h5.97v7l1 1 1-1v-7H19v-2c-1.66 0-3-1.34-3-3z" fill="currentColor"/></g>';
 
 		// Copy glyph in the same native icon style.
 		const COPY_SVG_PATH = '<rect x="5.4" y="5.4" width="7.8" height="7.8" rx="1.6" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M10.6 3.2H4.4c-1 0-1.8.8-1.8 1.8v6.2" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round"/>';
@@ -530,6 +534,28 @@ window.__ModuleLoader__.load({
 						copyText(sid);
 					});
 					menu.appendChild(item);
+					// 固定/取消固定 in the native tree session menu (Jasper 2026-09-09):
+					// same injection channel as the copy item; the label reflects the
+					// live pin state at menu-open time.
+					const pinned = isPinned(sid);
+					const pinItem = buildMenuItem(menu, "dsx2-pin-item", PIN_SVG_PATH, pinned ? "取消固定" : "固定会话");
+					if (pinItem !== null) {
+						pinItem.addEventListener("click", (e) => {
+							e.stopPropagation();
+							dismissNativeMenu();
+							if (pinned) unpinSession(sid);
+							else {
+								let title;
+								try {
+									const snap = safeSnap(sList);
+									const entry = snap !== undefined && snap.byId !== undefined ? snap.byId[sid] : undefined;
+									if (entry !== undefined) title = entry.blank === true ? "新会话" : String(entry.displayTitle || sid);
+								} catch (error) {}
+								pinSession(sid, title);
+							}
+						});
+						menu.appendChild(pinItem);
+					}
 				}
 			}
 			watchMenuPortals();
@@ -575,11 +601,8 @@ window.__ModuleLoader__.load({
 		}
 
 		function applyModeClass() {
-			const on = railHidden === false;
-			document.documentElement.classList.toggle("dsx2-recent-on", on && mode === "recent");
-			// Workspaces tab renders through the same self-drawn list (per-workspace
-			// groups, 5-at-a-time paging, pin menu); the native tree stays hidden.
-			document.documentElement.classList.toggle("dsx2-ws-on", on && mode === "workspaces");
+			const on = mode === "recent" && railHidden === false;
+			document.documentElement.classList.toggle("dsx2-recent-on", on);
 		}
 
 		function syncTabs() {
@@ -592,8 +615,10 @@ window.__ModuleLoader__.load({
 			mode = next;
 			syncTabs();
 			applyModeClass();
-			refreshBaseline();
-			renderList();
+			if (mode === "recent") {
+				refreshBaseline();
+				renderList();
+			}
 		}
 
 		function emptyNote(text) {
@@ -675,11 +700,14 @@ window.__ModuleLoader__.load({
 			const head = ids.length > 0 ? ids[0] : "";
 			const tail = ids.length > 0 ? ids[ids.length - 1] : "";
 			const wsShape = (wlist.items || []).map((w) => w.workspaceId + ":" + ((w.sessionIds || []).length) + ":" + (w.archivedSessionIds || []).length).join("|");
-			return mode + "~" + ids.length + "~" + head + "~" + tail + "~" + String(list.current) + "~" + String(list.phase) + "~" + filter + "~" + wsShape + "~tv" + titleVersion;
+			return ids.length + "~" + head + "~" + tail + "~" + String(list.current) + "~" + String(list.phase) + "~" + filter + "~" + wsShape + "~tv" + titleVersion;
 		}
 
-		// "Show remaining N" — grows one group's cap and rebuilds the list.
+		// "Show remaining N" with a 收起 escape on the same row: expand grows
+		// the group's cap by one page, collapse resets it to the first page.
 		function moreButtonEl(count, key) {
+			const row = document.createElement("div");
+			row.className = "dsx2-more-row";
 			const btn = document.createElement("button");
 			btn.type = "button";
 			btn.className = "dsx2-more-btn";
@@ -689,7 +717,18 @@ window.__ModuleLoader__.load({
 				lastRenderFp = "";
 				renderList();
 			});
-			return btn;
+			const collapse = document.createElement("button");
+			collapse.type = "button";
+			collapse.className = "dsx2-collapse-btn";
+			collapse.textContent = "收起";
+			collapse.addEventListener("click", () => {
+				renderLimit[key] = RENDER_CHUNK_FIRST;
+				lastRenderFp = "";
+				renderList();
+			});
+			row.appendChild(btn);
+			row.appendChild(collapse);
+			return row;
 		}
 
 		// Rebuild only the visible DOM from the (capped) row model. Rows past
@@ -730,47 +769,16 @@ window.__ModuleLoader__.load({
 				rows.sort(byRecency);
 				if (rows.length === 0 && q === "" && list.ids.length === 0 && list.phase !== "ready") healOrphanedStore();
 				parts = partitionByWorkspace(rows, wsOf);
-				let wsGroups = null;
-				if (mode === "workspaces") {
-					// The workspaces tab replaces the native tree (whose "展开其余 N"
-					// expands a whole group at once) with one self-drawn group per
-					// workspace, newest workspace first, external callers last.
-					const byWs = new Map();
-					for (const s of parts.ws) {
-						const w = wsOf.get(s.id);
-						const id = w !== undefined ? w.workspaceId : "ext";
-						let b = byWs.get(id);
-						if (b === undefined) {
-							b = { key: "w:" + id, title: w !== undefined ? w.title : "外部调用", icon: w !== undefined ? folderGlyphSvg() : TERMINAL_SVG, items: [], latest: 0 };
-							byWs.set(id, b);
-						}
-						b.items.push(s);
-						if (s.updatedAt > b.latest) b.latest = s.updatedAt;
-					}
-					const buckets = Array.from(byWs.values());
-					buckets.sort((a, b) => b.latest - a.latest);
-					const extIdx = buckets.findIndex((b) => b.key === "w:ext");
-					if (extIdx >= 0) buckets.push(buckets.splice(extIdx, 1)[0]);
-					wsGroups = buckets;
-				}
-				rowsCache = { fp: fp, parts: parts, wsOf: wsOf, wsGroups: wsGroups };
+				rowsCache = { fp: fp, parts: parts, wsOf: wsOf };
 			} else {
 				parts = rowsCache.parts;
 				wsOf = rowsCache.wsOf;
 			}
-			const groupList = mode === "workspaces" ? (rowsCache.wsGroups || []) : null;
-			const limitSig = groupList !== null
-				? groupList.map((g) => g.key + ":" + (renderLimit[g.key] || 0)).join("|")
-				: String(renderLimit.ws) + "," + String(renderLimit.ext);
-			const collapseSig = groupList !== null
-				? groupList.map((g) => (grpState[g.key] ? 1 : 0)).join("")
-				: (grpState.ws ? 1 : 0) + "" + (grpState.ext ? 1 : 0);
-			const viewFp = fp + "#" + limitSig + "#" + String(list.current) + "#" + collapseSig;
+			const viewFp = fp + "#" + renderLimit.ws + "," + renderLimit.ext + "#" + String(list.current) + "#" + (grpState.ws ? 1 : 0) + (grpState.ext ? 1 : 0);
 			if (viewFp === lastRenderFp) return;
 			lastRenderFp = viewFp;
 			listDiv.textContent = "";
-			const totalRows = groupList !== null ? groupList.reduce((n, g) => n + g.items.length, 0) : parts.ws.length + parts.ext.length;
-			if (totalRows === 0) {
+			if (parts.ws.length + parts.ext.length === 0) {
 				listDiv.appendChild(emptyNote(filter.trim() !== "" ? "无匹配会话" : "暂无会话"));
 				return;
 			}
@@ -782,12 +790,10 @@ window.__ModuleLoader__.load({
 			// (default-collapsed) external group stay reachable.
 			const searching = filter.trim() !== "";
 			const keepScroll = listDiv.scrollTop;
-			const groups = groupList !== null
-				? groupList.map((g) => ({ key: g.key, icon: g.icon, label: g.title, items: g.items }))
-				: [
-					{ key: "ws", icon: folderGlyphSvg(), label: "工作区", items: parts.ws },
-					{ key: "ext", icon: TERMINAL_SVG, label: "外部调用", items: parts.ext }
-				];
+			const groups = [
+				{ key: "ws", icon: folderGlyphSvg(), label: "工作区", items: parts.ws },
+				{ key: "ext", icon: TERMINAL_SVG, label: "外部调用", items: parts.ext }
+			];
 			for (const g of groups) {
 				if (g.items.length === 0) continue;
 				const collapsed = searching ? false : grpState[g.key] === true;
@@ -967,7 +973,7 @@ window.__ModuleLoader__.load({
 			const timer = ctx.get !== undefined ? ctx.get("timer") : undefined;
 			if (timer !== undefined) {
 				try { keepAlive = timer.interval(ensureHost, 800); } catch (error) {}
-				try { timeTicker = timer.interval(() => { updateTimes(); }, 30000); } catch (error) {}
+				try { timeTicker = timer.interval(() => { if (mode === "recent") updateTimes(); }, 30000); } catch (error) {}
 				try { refreshTicker = timer.interval(() => { if (document.visibilityState !== "hidden") refreshBaseline(); }, 120000); } catch (error) {}
 			}
 			onVisible = () => { if (document.visibilityState !== "hidden") refreshBaseline(); };
@@ -992,7 +998,6 @@ window.__ModuleLoader__.load({
 			if (menuFixObserver !== null) { try { menuFixObserver.disconnect(); } catch (error) {} menuFixObserver = null; }
 			if (hostDiv !== null && hostDiv.parentElement !== null) hostDiv.parentElement.removeChild(hostDiv);
 			document.documentElement.classList.remove("dsx2-recent-on");
-			document.documentElement.classList.remove("dsx2-ws-on");
 		}
 
 		// A page opened during the host's own startup window can run apply()

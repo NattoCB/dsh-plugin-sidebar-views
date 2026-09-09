@@ -216,7 +216,7 @@ test("stale session baseline: the view re-pulls so cli/automation-created sessio
 	assert.ok(/function refreshBaseline\(\)/.test(code), "a refreshBaseline helper must exist");
 	assert.ok(/typeof sessions\.refresh !== "function"/.test(code), "the helper must feature-detect the sessions facade");
 	assert.ok(/sessions\.refresh\(\);/.test(code), "the helper must call sessions.refresh()");
-	assert.ok(/function setMode\(next\)\s*\{\s*mode = next;\s*syncTabs\(\);\s*applyModeClass\(\);\s*refreshBaseline\(\);\s*renderList\(\);/.test(code), "opening either tab must refresh before rendering (both tabs are self-drawn)");
+	assert.ok(/mode === "recent"\)\s*\{\s*refreshBaseline\(\);\s*renderList\(\);/.test(code), "opening the recent tab must refresh before rendering");
 	assert.ok(/timer\.interval\(\(\) => \{ if \(document\.visibilityState !== "hidden"\) refreshBaseline\(\); \}, \d+\)/.test(code), "a periodic refresh ticker must run while the page is visible");
 	assert.ok(/addEventListener\("visibilitychange", onVisible\)/.test(code), "waking a background tab must trigger a refresh");
 	assert.ok(/refreshTicker !== null\) \{ try \{ refreshTicker\(\); \} catch \(error\) \{\}\s*\}/.test(code), "the ticker must be disposed on cleanup");
@@ -244,7 +244,7 @@ test("service rebind: a rebuilt client-runtime instance must not orphan the view
 test("native session menus gain a copy-session-id item", () => {
 	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
 	assert.ok(/function findSessionId\(/.test(code), "a session-menu fiber resolver must exist");
-	assert.ok(/id\.indexOf\("session-"\) === 0/.test(code), "the resolver must anchor on session- ids only");
+	assert.ok(/id\.indexOf\("session-"\) === 0 \|\| id\.indexOf\("dsh-automation-session-"\) === 0/.test(code), "the resolver must anchor on both session id shapes");
 	assert.ok(/dsx2-sid-item/.test(code), "the injected item must carry a marker class");
 	assert.ok(/"复制 Session ID"/.test(code), "the injected label must match the sidebar row menu wording");
 	assert.ok(/copyText\(sid\)/.test(code), "the injected item must copy the resolved session id");
@@ -317,11 +317,11 @@ test("titleOfFrame tolerates torn lines and non-title JSON", () => {
 	assert.equal(_titleOfFrame(Buffer.alloc(0)), undefined);
 });
 
-test("workspaces tab renders self-drawn per-workspace groups with paging and pin menu", () => {
+test("native session menus gain a pin item and the show-more row gains 收起", () => {
 	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
-	assert.ok(/classList\.toggle\("dsx2-ws-on", on && mode === "workspaces"\)/.test(code), "the workspaces tab hides the native tree via the ws-on class");
-	assert.ok(/mode === "workspaces"\) \{[\s\S]*?byWs/.test(code), "the row model builds one bucket per workspace in ws mode");
-	assert.ok(/buckets\.sort\(\(a, b\) => b\.latest - a\.latest\)/.test(code), "workspaces sort by their newest session");
-	assert.ok(/b\.key === "w:ext"/.test(code), "the external bucket always renders last");
-	assert.ok(/groupList !== null\s*\?\s*groupList\.map\(\(g\) => \(\{ key: g\.key/.test(code), "ws mode renders one collapsible group per workspace (native 展开其余 N is gone)");
+	assert.ok(/dsx2-pin-item/.test(code), "the native session menu carries a marker-class pin item");
+	assert.ok(/pinned \? "取消固定" : "固定会话"/.test(code), "the pin label reflects live pin state");
+	assert.ok(/if \(pinned\) unpinSession\(sid\);/.test(code), "the pin item toggles through the shared pin store");
+	assert.ok(/dsx2-collapse-btn/.test(code), "the show-more row carries a collapse control");
+	assert.ok(/renderLimit\[key\] = RENDER_CHUNK_FIRST;/.test(code), "collapse resets the group cap to the first page");
 });
