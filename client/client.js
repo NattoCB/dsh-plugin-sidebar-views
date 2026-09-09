@@ -236,7 +236,9 @@ window.__ModuleLoader__.load({
 					anchor.parentNode.insertBefore(ctrl, native !== null ? native.nextSibling : null);
 				}
 				if (folded) {
+					// Fully folded to the header row: 收起 would be a no-op.
 					more.style.display = "";
+					fold.style.display = "none";
 					const label = "\u5c55\u5f00\u5176\u4f59 5 \u4e2a\u4f1a\u8bdd";
 					if (more.textContent !== label) more.textContent = label;
 				} else if (isExpanded) {
@@ -258,7 +260,6 @@ window.__ModuleLoader__.load({
 						if (more.textContent !== label) more.textContent = label;
 					}
 				}
-				fold.style.display = "";
 			}
 		}
 		
