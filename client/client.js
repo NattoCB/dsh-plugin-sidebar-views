@@ -245,10 +245,18 @@ window.__ModuleLoader__.load({
 					const label = "\u5c55\u5f00\u66f4\u591a " + Math.min(WS_PAGE, remaining) + " \u4e2a\u4f1a\u8bdd";
 					if (remaining > 0 && more.textContent !== label) more.textContent = label;
 				} else {
-					// Collapsed native page: one more page exists.
-					more.style.display = "";
-					const label = "\u5c55\u5f00\u5176\u4f59 " + Math.min(WS_PAGE, Math.max(total - WS_PAGE, 0) || WS_PAGE) + " \u4e2a\u4f1a\u8bdd";
-					if (more.textContent !== label) more.textContent = label;
+					// Collapsed native page: the DOM holds only the first 5 rows;
+					// the real remaining count lives in the (hidden) native label.
+					let remaining = 0;
+					if (native !== null) {
+						const m = native.textContent.match(/(\d+)/);
+						remaining = m !== null ? Number(m[1]) : 0;
+					}
+					more.style.display = remaining > 0 ? "" : "none";
+					if (remaining > 0) {
+						const label = "\u5c55\u5f00\u5176\u4f59 " + Math.min(WS_PAGE, remaining) + " \u4e2a\u4f1a\u8bdd";
+						if (more.textContent !== label) more.textContent = label;
+					}
 				}
 				fold.style.display = "";
 			}

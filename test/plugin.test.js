@@ -350,3 +350,10 @@ assert.ok(/more\.parentNode !== ctrl\) ctrl\.appendChild\(more\)/.test(code), "t
 	assert.ok(/more\.style\.display = "";\n\t\t\t\t\tconst label = "\\u5c55\\u5f00\\u5176\\u4f59 5 \\u4e2a\\u4f1a\\u8bdd"/.test(code), "the collapsed page shows our own 展开其余 5 个会话 control");
 	assert.ok(/more\.textContent !== label\) more\.textContent = label/.test(code), "control labels are compare-first (settled tree = zero mutations)");
 });
+
+test("a 5-row group shows only 收起 — no phantom 展开其余 control", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	assert.ok(code.includes("native.textContent.match(/(\\d+)/)"), "the real remaining count comes from the native label, not the 5-row DOM");
+	assert.ok(/remaining = m !== null \? Number\(m\[1\]\) : 0;/.test(code), "a group with no overflow label shows no forward control");
+	assert.ok(!/Math\.max\(total - WS_PAGE, 0\) \|\| WS_PAGE/.test(code), "the 0-fallback that fabricated a phantom count is gone");
+});
