@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.15 — 2026-09-09
+
+- Re-lands 0.3.13's intent with the reverse path actually verified: a
+  fully folded workspace shows only 展开其余 5 个会话 (the no-op 收起 is
+  hidden), and unfolding from that state was tested end-to-end this time
+  (fold → unfold → page, all steps green).
+- Groups with zero rendered session rows (data still arriving, or truly
+  empty workspaces) render no control row at all — no lone 收起 hanging
+  under a bare header. Tests 31/31.
+
 ## 0.3.14 — 2026-09-09
 
 - Reverted 0.3.13 (hiding 收起 on fully folded workspaces): it broke

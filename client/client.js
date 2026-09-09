@@ -184,6 +184,12 @@ window.__ModuleLoader__.load({
 				const rows = Array.from(sec.children).filter((c) => c.tagName === "SPAN" && c !== header.parentElement && c.querySelector("[role=\"treeitem\"][aria-selected]"));
 				const total = rows.length;
 				const folded = wsCaps.get(title) === 0; // workspace folded to its header row
+				if (total === 0 && !folded) {
+					// No session rows rendered yet (data still arriving, or a truly
+					// empty group): a lone 收起 under the header is meaningless.
+					for (const stale of sec.querySelectorAll(".dsx2-cap-row, .dsx2-more-btn, .dsx2-collapse-btn")) stale.remove();
+					continue;
+				}
 				const cap = folded ? 0 : isExpanded ? Math.min(wsCaps.has(title) ? wsCaps.get(title) : WS_PAGE * 2, total) : Math.min(total, WS_PAGE);
 				if (isExpanded && !folded) wsCaps.set(title, cap);
 				rows.forEach((span, i) => {
@@ -236,7 +242,9 @@ window.__ModuleLoader__.load({
 					anchor.parentNode.insertBefore(ctrl, native !== null ? native.nextSibling : null);
 				}
 				if (folded) {
+					// Fully folded to the header row: 收起 would be a no-op there.
 					more.style.display = "";
+					fold.style.display = "none";
 					const label = "\u5c55\u5f00\u5176\u4f59 5 \u4e2a\u4f1a\u8bdd";
 					if (more.textContent !== label) more.textContent = label;
 				} else if (isExpanded) {
