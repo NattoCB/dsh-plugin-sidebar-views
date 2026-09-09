@@ -6,7 +6,7 @@ window.__ModuleLoader__.load({
 		Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 
 		// ── CSS (sidebar views + pinned group + row menu) ─────────────────
-		const css = ".dsx2-host{order:-1;flex:none;display:flex;flex-direction:column;gap:6px;padding:2px 0 6px}html.dsx2-recent-on .dsx2-host{flex:1 1 0;min-height:0}html.dsx2-recent-on [data-slot=\"sidebar.workspaces\"] > div > :not(.dsx2-host){display:none!important}.dsx2-bar{display:flex;align-items:center;gap:6px;flex:none}.dsx2-tabs{display:flex;flex:1;min-width:0;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.08));border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:9px;padding:2px;gap:2px}.dsx2-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;height:24px;border:none;border-radius:7px;background:transparent;color:var(--dsw-alias-label-secondary);cursor:pointer;font-size:12px;line-height:16px;padding:0 6px;white-space:nowrap;overflow:hidden;font-family:inherit}.dsx2-tab:hover{color:var(--dsw-alias-label-primary)}.dsx2-tab-active{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary);font-weight:500}.dsx2-search{display:none;align-items:center;gap:6px;height:26px;padding:0 8px;border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:8px;color:var(--dsw-alias-label-tertiary);flex:none}html.dsx2-recent-on .dsx2-search{display:flex}.dsx2-search-input{flex:1;min-width:0;border:none;outline:none;background:transparent;color:var(--dsw-alias-label-primary);font-size:12px;line-height:16px;font-family:inherit}.dsx2-search-input::placeholder{color:var(--dsw-alias-label-tertiary)}.dsx2-pinned{flex:none;display:flex;flex-direction:column;min-height:0}.dsx2-pinned-head{display:flex;align-items:center;gap:5px;height:26px;padding:0 6px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-secondary);font-size:12px;font-weight:600;user-select:none;flex:none}.dsx2-pinned-head:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12));color:var(--dsw-alias-label-primary)}.dsx2-pin-icon{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-chevron{flex:none;font-size:10px;line-height:1;color:var(--dsw-alias-label-tertiary);transition:transform .15s ease}.dsx2-chevron-closed{transform:rotate(-90deg)}.dsx2-pinned-count{flex:none;color:var(--dsw-alias-label-tertiary);font-weight:400;font-size:11px}.dsx2-pinned-rows{display:flex;flex-direction:column;max-height:150px;overflow-y:auto;padding-bottom:2px}.dsx2-pinned-closed .dsx2-pinned-rows{display:none}.dsx2-list{display:none;flex:1;min-height:0;overflow-y:auto;padding-bottom:12px}html.dsx2-recent-on .dsx2-list{display:block}.dsx2-row{display:flex;align-items:center;gap:7px;height:30px;padding:0 8px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-primary);font-size:13px;user-select:none}.dsx2-row:hover{background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-row-current{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18))}.dsx2-row-dead{opacity:.45;cursor:default}.dsx2-row-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dsx2-row-pin{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-row-tag{flex:none;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--dsw-alias-label-tertiary);font-size:11px;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1));border-radius:5px;padding:1px 5px}.dsx2-row-time{flex:none;color:var(--dsw-alias-label-tertiary);font-size:11px}.dsx2-more{display:none;flex:none;width:20px;height:20px;align-items:center;justify-content:center;border:none;background:transparent;border-radius:5px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:13px;line-height:1;padding:0}.dsx2-row:hover .dsx2-more{display:inline-flex}.dsx2-more:hover{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary)}.dsx2-dot{width:7px;height:7px;border-radius:50%;flex:none}.dsx2-dot-run{background:var(--dsw-alias-state-success-primary,#22c55e);animation:dsx2-pulse 1.6s ease-in-out infinite}.dsx2-dot-done{background:var(--dsw-alias-state-success-primary,#22c55e);opacity:.55}.dsx2-dot-warn{background:var(--dsw-alias-state-warn-primary,#f59e0b)}@keyframes dsx2-pulse{0%,100%{opacity:1}50%{opacity:.35}}.dsx2-more-row{display:flex;align-items:center;gap:6px;margin:2px 8px 0 8px}.dsx2-more-btn{display:block;flex:1;min-width:0;height:28px;border:none;background:transparent;border-radius:8px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:12px;font-family:inherit;text-align:left;padding:0 12px 0 28px}.dsx2-more-btn:hover{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-collapse-btn{flex:none;height:28px;border:none;background:transparent;border-radius:8px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:12px;font-family:inherit;padding:0 10px}.dsx2-collapse-btn:hover{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-empty{color:var(--dsw-alias-label-tertiary);padding:14px 10px;font-size:12px}.dsx2-more-btn{display:block;width:calc(100% - 16px);margin:2px 8px 0 8px;height:28px;border:none;background:transparent;border-radius:8px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:12px;font-family:inherit;text-align:left;padding:0 12px 0 28px}.dsx2-more-btn:hover{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-grp-rows{content-visibility:auto;contain-intrinsic-size:auto 30px}.dsx2-grp-head{margin-top:3px}.dsx2-grp-icon{color:var(--dsw-alias-label-tertiary)}.dsx2-menu{position:fixed;z-index:9999;min-width:170px;background:var(--dsw-alias-bg-layer-1,#ffffff);border:1px solid var(--dsw-alias-border-l2,rgba(0,0,0,.12));border-radius:10px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:flex;flex-direction:column}.dsx2-menu-item{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;border:none;background:transparent;border-radius:7px;color:var(--dsw-alias-label-primary);cursor:pointer;font-size:13px;text-align:left;font-family:inherit;white-space:nowrap}.dsx2-menu-item:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12))}@media (prefers-reduced-motion:reduce){.dsx2-dot-run{animation:none}}";
+		const css = ".dsx2-host{order:-1;flex:none;display:flex;flex-direction:column;gap:6px;padding:2px 0 6px}html.dsx2-recent-on .dsx2-host{flex:1 1 0;min-height:0}html.dsx2-recent-on [data-slot=\"sidebar.workspaces\"] > div > :not(.dsx2-host){display:none!important}.dsx2-bar{display:flex;align-items:center;gap:6px;flex:none}.dsx2-tabs{display:flex;flex:1;min-width:0;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.08));border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:9px;padding:2px;gap:2px}.dsx2-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;height:24px;border:none;border-radius:7px;background:transparent;color:var(--dsw-alias-label-secondary);cursor:pointer;font-size:12px;line-height:16px;padding:0 6px;white-space:nowrap;overflow:hidden;font-family:inherit}.dsx2-tab:hover{color:var(--dsw-alias-label-primary)}.dsx2-tab-active{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary);font-weight:500}.dsx2-search{display:none;align-items:center;gap:6px;height:26px;padding:0 8px;border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:8px;color:var(--dsw-alias-label-tertiary);flex:none}html.dsx2-recent-on .dsx2-search{display:flex}.dsx2-search-input{flex:1;min-width:0;border:none;outline:none;background:transparent;color:var(--dsw-alias-label-primary);font-size:12px;line-height:16px;font-family:inherit}.dsx2-search-input::placeholder{color:var(--dsw-alias-label-tertiary)}.dsx2-pinned{flex:none;display:flex;flex-direction:column;min-height:0}.dsx2-pinned-head{display:flex;align-items:center;gap:5px;height:26px;padding:0 6px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-secondary);font-size:12px;font-weight:600;user-select:none;flex:none}.dsx2-pinned-head:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12));color:var(--dsw-alias-label-primary)}.dsx2-pin-icon{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-chevron{flex:none;font-size:10px;line-height:1;color:var(--dsw-alias-label-tertiary);transition:transform .15s ease}.dsx2-chevron-closed{transform:rotate(-90deg)}.dsx2-pinned-count{flex:none;color:var(--dsw-alias-label-tertiary);font-weight:400;font-size:11px}.dsx2-pinned-rows{display:flex;flex-direction:column;max-height:150px;overflow-y:auto;padding-bottom:2px}.dsx2-pinned-closed .dsx2-pinned-rows{display:none}.dsx2-list{display:none;flex:1;min-height:0;overflow-y:auto;padding-bottom:12px}html.dsx2-recent-on .dsx2-list{display:block}.dsx2-row{display:flex;align-items:center;gap:7px;height:30px;padding:0 8px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-primary);font-size:13px;user-select:none}.dsx2-row:hover{background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-row-current{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18))}.dsx2-row-dead{opacity:.45;cursor:default}.dsx2-row-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dsx2-row-pin{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-row-tag{flex:none;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--dsw-alias-label-tertiary);font-size:11px;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1));border-radius:5px;padding:1px 5px}.dsx2-row-time{flex:none;color:var(--dsw-alias-label-tertiary);font-size:11px}.dsx2-more{display:none;flex:none;width:20px;height:20px;align-items:center;justify-content:center;border:none;background:transparent;border-radius:5px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:13px;line-height:1;padding:0}.dsx2-row:hover .dsx2-more{display:inline-flex}.dsx2-more:hover{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary)}.dsx2-dot{width:7px;height:7px;border-radius:50%;flex:none}.dsx2-dot-run{background:var(--dsw-alias-state-success-primary,#22c55e);animation:dsx2-pulse 1.6s ease-in-out infinite}.dsx2-dot-done{background:var(--dsw-alias-state-success-primary,#22c55e);opacity:.55}.dsx2-dot-warn{background:var(--dsw-alias-state-warn-primary,#f59e0b)}@keyframes dsx2-pulse{0%,100%{opacity:1}50%{opacity:.35}}.dsx2-more-row{display:flex;align-items:center;gap:6px;margin:2px 8px 0 8px}.dsx2-more-btn{display:block;flex:1;min-width:0;height:28px;border:none;background:transparent;border-radius:8px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:12px;font-family:inherit;text-align:left;padding:0 12px 0 28px}.dsx2-more-btn:hover{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-collapse-btn{flex:none;height:28px;border:none;background:transparent;border-radius:8px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:12px;font-family:inherit;padding:0 10px}.dsx2-collapse-btn:hover{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}[class*='sessionOverflow']{display:none!important}.dsx2-empty{color:var(--dsw-alias-label-tertiary);padding:14px 10px;font-size:12px}.dsx2-more-btn{display:block;width:calc(100% - 16px);margin:2px 8px 0 8px;height:28px;border:none;background:transparent;border-radius:8px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:12px;font-family:inherit;text-align:left;padding:0 12px 0 28px}.dsx2-more-btn:hover{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-grp-rows{content-visibility:auto;contain-intrinsic-size:auto 30px}.dsx2-grp-head{margin-top:3px}.dsx2-grp-icon{color:var(--dsw-alias-label-tertiary)}.dsx2-menu{position:fixed;z-index:9999;min-width:170px;background:var(--dsw-alias-bg-layer-1,#ffffff);border:1px solid var(--dsw-alias-border-l2,rgba(0,0,0,.12));border-radius:10px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:flex;flex-direction:column}.dsx2-menu-item{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;border:none;background:transparent;border-radius:7px;color:var(--dsw-alias-label-primary);cursor:pointer;font-size:13px;text-align:left;font-family:inherit;white-space:nowrap}.dsx2-menu-item:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12))}@media (prefers-reduced-motion:reduce){.dsx2-dot-run{animation:none}}";
 		const cssTagId = "dsh-plugin-sidebar-views/sidebar.css";
 		if (typeof document !== "undefined" && !document.querySelector("style[data-plugin-css=\"" + cssTagId + "\"]")) {
 			const tag = document.createElement("style");
@@ -144,14 +144,13 @@ window.__ModuleLoader__.load({
 			}).catch(() => {});
 		}
 
-		// ── workspaces tab: page the native tree's expanded groups ─────────
-		// The native "展开其余 N 个会话" expands a whole group in one shot
-		// (boolean expansion state — no progressive limit to tune). Rather than
-		// replacing the tree (0.3.8's mistake), an observer caps freshly expanded
-		// groups: rows beyond the cap are hidden inline (the native rows keep
-		// their lineage indentation, drag order and icons), and a self-drawn
-		// "展开更多 5 个会话" control grows the cap one page at a time. The
-		// native 收起 button stays as the way back to the collapsed 5-row page.
+		// ── workspaces tab: page the native tree's groups ──────────────────
+		// React's expansion is boolean (5-row page or the whole group), and the
+		// native button advertises "展开其余 165 个会话". An observer rewrites
+		// that count to one page, caps freshly expanded groups, and gives every
+		// group a two-button row: 展开其余/更多 5 个会话 + 收起 (folds the
+		// workspace to its header row; wsCaps 0 marks that state). Inline style
+		// writes keep the native rows' lineage indentation, drag order, icons.
 		const WS_PAGE = 5;
 		const wsCaps = new Map(); // group title → visible row cap
 		let wsTreeObserver = null;
@@ -164,43 +163,94 @@ window.__ModuleLoader__.load({
 			if (tree === null) return;
 			for (const sec of tree.querySelectorAll("[class*='groupSection']")) {
 				const header = sec.querySelector(":scope > span [role=\"treeitem\"][aria-expanded]");
-				const btn = sec.querySelector(":scope > button");
-				if (header === null || btn === null) continue;
+				if (header === null) continue;
 				const title = header.textContent.trim();
-				if (btn.textContent.indexOf("收起") === -1) {
-					// collapsed page (5 rows + 展开其余): drop any leftover control and reset
-					const stale = sec.querySelector(":scope > .dsx2-cap-row");
-					if (stale !== null) stale.remove();
-					if (wsCaps.has(title)) wsCaps.delete(title);
-					continue;
-				}
+				const native = sec.querySelector(":scope > button");
+				// The native overflow button (展开其余 165 个会话 / 收起) is dead
+				// CSS-wise ([class*="sessionOverflow"]{display:none!important}) —
+				// a rebuilt button cannot flash the raw count. Its React state is
+				// still what our controls drive; the label is only read, never shown.
+				const isExpanded = native !== null && native.textContent.indexOf("\u6536\u8d77") !== -1; // 收起
+				// React rebuilds this section on every data tick and our injected
+				// nodes do not survive it as a unit: the row div can be dropped
+				// while its buttons are left behind as orphans, and the native
+				// button comes back with the raw "165" label and visible. So every
+				// pass starts by sweeping ALL injected nodes, then rebuilds exactly
+				// one control row; every write is compare-first so a settled tree
+				// costs zero mutations (no observer feedback loop).
+				for (const stale of sec.querySelectorAll(":scope > .dsx2-more-btn, :scope > .dsx2-collapse-btn, .dsx2-more-btn:not(.dsx2-cap-row .dsx2-more-btn), .dsx2-collapse-btn:not(.dsx2-cap-row .dsx2-collapse-btn)")) stale.remove();
+				let ctrl = sec.querySelector(":scope > .dsx2-cap-row");
+				for (const extra of sec.querySelectorAll(".dsx2-cap-row")) if (extra !== ctrl) extra.remove();
 				const rows = Array.from(sec.children).filter((c) => c.tagName === "SPAN" && c !== header.parentElement && c.querySelector("[role=\"treeitem\"][aria-selected]"));
 				const total = rows.length;
-				if (total <= 5) continue;
-				const cap = Math.min(wsCaps.has(title) ? wsCaps.get(title) : WS_PAGE * 2, total);
-				wsCaps.set(title, cap);
+				const folded = wsCaps.get(title) === 0; // workspace folded to its header row
+				const cap = folded ? 0 : isExpanded ? Math.min(wsCaps.has(title) ? wsCaps.get(title) : WS_PAGE * 2, total) : Math.min(total, WS_PAGE);
+				if (isExpanded && !folded) wsCaps.set(title, cap);
 				rows.forEach((span, i) => {
 					const want = i < cap ? "" : "none";
 					if (span.style.display !== want) span.style.display = want;
 				});
-				let ctrl = sec.querySelector(":scope > .dsx2-cap-row");
+				// The control row: page forward + 收起 (folds the workspace).
 				if (ctrl === null) {
 					ctrl = document.createElement("div");
 					ctrl.className = "dsx2-more-row dsx2-cap-row";
-					const more = document.createElement("button");
+				}
+				let more = ctrl.querySelector(".dsx2-more-btn");
+				if (more === null) {
+					more = document.createElement("button");
 					more.type = "button";
 					more.className = "dsx2-more-btn";
-					more.addEventListener("click", () => {
-						wsCaps.set(title, Math.min(total, cap + WS_PAGE));
+				more.addEventListener("click", () => {
+					const n = sec.querySelector(":scope > button");
+					if (n !== null && n.textContent.indexOf("\u6536\u8d77") !== -1) {
+						// Capped expanded group: grow one page (applyWsCaps clamps).
+						const cur = wsCaps.has(title) ? wsCaps.get(title) : WS_PAGE * 2;
+						wsCaps.set(title, cur + WS_PAGE);
 						applyWsCaps();
-					});
-					ctrl.appendChild(more);
-					btn.parentNode.insertBefore(ctrl, btn);
+					} else {
+						// Folded (cap 0): re-expand through the native button.
+						wsCaps.delete(title);
+						if (n !== null && n.textContent.indexOf("\u5c55\u5f00\u5176\u4f59") === 0) n.click(); // 展开其余
+						else applyWsCaps();
+					}
+				});
 				}
-				const more = ctrl.firstElementChild;
-				const remaining = total - cap;
-				more.style.display = remaining > 0 ? "" : "none";
-				if (remaining > 0) more.textContent = "展开更多 " + Math.min(WS_PAGE, remaining) + " 个会话";
+				let fold = ctrl.querySelector(".dsx2-collapse-btn");
+				if (fold === null) {
+					fold = document.createElement("button");
+					fold.type = "button";
+					fold.className = "dsx2-collapse-btn";
+					fold.textContent = "\u6536\u8d77";
+				}
+				fold.addEventListener("click", () => {
+					wsCaps.set(title, 0);
+					// Flip React's expanded state too so the chevron matches.
+					const n = sec.querySelector(":scope > button");
+					if (n !== null && n.textContent.indexOf("\u6536\u8d77") !== -1) n.click();
+					applyWsCaps();
+				});
+				if (more.parentNode !== ctrl) ctrl.appendChild(more);
+				if (fold.parentNode !== ctrl) ctrl.appendChild(fold);
+				const anchor = native !== null ? native : header;
+				if (ctrl.previousElementSibling !== anchor || ctrl.nextElementSibling !== (native !== null ? native.nextSibling : null)) {
+					anchor.parentNode.insertBefore(ctrl, native !== null ? native.nextSibling : null);
+				}
+				if (folded) {
+					more.style.display = "";
+					const label = "\u5c55\u5f00\u5176\u4f59 5 \u4e2a\u4f1a\u8bdd";
+					if (more.textContent !== label) more.textContent = label;
+				} else if (isExpanded) {
+					const remaining = total - cap;
+					more.style.display = remaining > 0 ? "" : "none";
+					const label = "\u5c55\u5f00\u66f4\u591a " + Math.min(WS_PAGE, remaining) + " \u4e2a\u4f1a\u8bdd";
+					if (remaining > 0 && more.textContent !== label) more.textContent = label;
+				} else {
+					// Collapsed native page: one more page exists.
+					more.style.display = "";
+					const label = "\u5c55\u5f00\u5176\u4f59 " + Math.min(WS_PAGE, Math.max(total - WS_PAGE, 0) || WS_PAGE) + " \u4e2a\u4f1a\u8bdd";
+					if (more.textContent !== label) more.textContent = label;
+				}
+				fold.style.display = "";
 			}
 		}
 		

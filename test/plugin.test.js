@@ -326,12 +326,27 @@ test("native session menus gain a pin item and the show-more row gains 收起", 
 	assert.ok(/renderLimit\[key\] = RENDER_CHUNK_FIRST;/.test(code), "collapse resets the group cap to the first page");
 });
 
-test("workspaces tab: native expanded groups are paged 5-at-a-time without replacing the tree", () => {
+test("workspaces tab: groups page 5-at-a-time with a fold control; the 165-count never shows", () => {
 	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
 	assert.ok(/const WS_PAGE = 5;/.test(code), "the native-tree page size is five");
 	assert.ok(/function applyWsCaps\(\)/.test(code), "an observer-driven cap applier exists");
 	assert.ok(/\[class\*='groupSection'\]/.test(code), "caps target the native group sections (rows keep lineage/drag/icons)");
 	assert.ok(/span\.style\.display !== want/.test(code), "row hiding is idempotent (no observer feedback loop)");
-	assert.ok(/dsx2-cap-row/.test(code), "a self-drawn 展开更多 control is injected beside the native 收起");
-	assert.ok(/btn\.textContent\.indexOf\("收起"\)/.test(code), "the native collapse button remains the way back");
+	assert.ok(/dsx2-cap-row/.test(code), "a self-drawn control row is injected per group");
+	// the two-button control row: page forward + fold
+	assert.ok(/"\\u5c55\\u5f00\\u66f4\\u591a " \+ Math\.min\(WS_PAGE, remaining\)/.test(code), "expanded groups show 展开更多 5 个会话");
+	assert.ok(/"\\u5c55\\u5f00\\u5176\\u4f59 5 \\u4e2a\\u4f1a\\u8bdd"/.test(code), "folded-to-header state offers 展开其余 5 个会话");
+	assert.ok(/fold\.textContent = "\\u6536\\u8d77"/.test(code), "every group gets a 收起 control");
+	assert.ok(/wsCaps\.set\(title, 0\)/.test(code), "收起 folds the workspace to its header row (cap 0)");
+	// the native overflow button is dead CSS-wise — the raw count can never show
+	assert.ok(/\[class\*=\'sessionOverflow\'\]\{display:none!important\}/.test(code), "the native 展开其余 165 个会话 button is hidden by CSS (rebuild-proof)");
+});
+
+test("workspaces tab: injected controls survive React rebuilds (sweep-first, compare-first)", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	assert.ok(/querySelectorAll\(":scope > \.dsx2-more-btn, :scope > \.dsx2-collapse-btn, \.dsx2-more-btn:not\(\.dsx2-cap-row \.dsx2-more-btn\), \.dsx2-collapse-btn:not\(\.dsx2-cap-row \.dsx2-collapse-btn\)"\)\) stale\.remove\(\)/.test(code), "every pass sweeps stale injected nodes React left behind");
+assert.ok(/for \(const extra of sec\.querySelectorAll\("\.dsx2-cap-row"\)\) if \(extra !== ctrl\) extra\.remove\(\)/.test(code), "duplicate control rows are collapsed into one");
+assert.ok(/more\.parentNode !== ctrl\) ctrl\.appendChild\(more\)/.test(code), "the control row is reused, not rebuilt, when it survives");
+	assert.ok(/more\.style\.display = "";\n\t\t\t\t\tconst label = "\\u5c55\\u5f00\\u5176\\u4f59 5 \\u4e2a\\u4f1a\\u8bdd"/.test(code), "the collapsed page shows our own 展开其余 5 个会话 control");
+	assert.ok(/more\.textContent !== label\) more\.textContent = label/.test(code), "control labels are compare-first (settled tree = zero mutations)");
 });
