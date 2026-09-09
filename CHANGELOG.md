@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.3.6 — 2026-09-09
+
+- Perf: the sidebar list no longer rebuilds the entire DOM per render at
+  20k-session scale. Each group renders a capped first chunk (300 rows) plus
+  a 显示其余 N 条 button that grows the cap by 2000; a row-model cache keyed
+  on a cheap data fingerprint (counts + boundary ids + workspace shape +
+  filter) skips re-filtering/re-sorting and DOM rebuilds entirely when only
+  highlights or pins changed. The 30s ticker now rewrites the relative-time
+  text of rendered rows (updateTimes) instead of rebuilding the list.
+  Measured live at 20,305 sessions: tab switch → first paint 28ms, ~2k DOM
+  nodes total (previously ~120k nodes / multi-second rebuilds).
+- Perf: refreshBaseline() gains a 45s min-gap gate. The 120s ticker,
+  visibilitychange and tab switches used to each trigger a full host
+  session.list pull — a ~14s full-disk scan at this scale that stacked into
+  concurrent 200%+ CPU spins; extra triggers inside the gap are absorbed and
+  the next ticker picks them up.
+- Live-verified in the real GUI at 20,305 sessions: show-more click 23ms
+  (300→2300 rows), search "AMV" 51ms with capped rendering, group
+  collapse/expand, pin/unpin (pins 9→10→9, no residue), tab switches all
+  green. Tests 20/20.
+
 ## 0.3.5 — 2026-09-06
 
 - Fix: the native workspace menu's "在 Finder 中打开" entry rendered below

@@ -6,7 +6,7 @@ window.__ModuleLoader__.load({
 		Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 
 		// ── CSS (sidebar views + pinned group + row menu) ─────────────────
-		const css = ".dsx2-host{order:-1;flex:none;display:flex;flex-direction:column;gap:6px;padding:2px 0 6px}html.dsx2-recent-on .dsx2-host{flex:1 1 0;min-height:0}html.dsx2-recent-on [data-slot=\"sidebar.workspaces\"] > div > :not(.dsx2-host){display:none!important}.dsx2-bar{display:flex;align-items:center;gap:6px;flex:none}.dsx2-tabs{display:flex;flex:1;min-width:0;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.08));border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:9px;padding:2px;gap:2px}.dsx2-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;height:24px;border:none;border-radius:7px;background:transparent;color:var(--dsw-alias-label-secondary);cursor:pointer;font-size:12px;line-height:16px;padding:0 6px;white-space:nowrap;overflow:hidden;font-family:inherit}.dsx2-tab:hover{color:var(--dsw-alias-label-primary)}.dsx2-tab-active{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary);font-weight:500}.dsx2-search{display:none;align-items:center;gap:6px;height:26px;padding:0 8px;border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:8px;color:var(--dsw-alias-label-tertiary);flex:none}html.dsx2-recent-on .dsx2-search{display:flex}.dsx2-search-input{flex:1;min-width:0;border:none;outline:none;background:transparent;color:var(--dsw-alias-label-primary);font-size:12px;line-height:16px;font-family:inherit}.dsx2-search-input::placeholder{color:var(--dsw-alias-label-tertiary)}.dsx2-pinned{flex:none;display:flex;flex-direction:column;min-height:0}.dsx2-pinned-head{display:flex;align-items:center;gap:5px;height:26px;padding:0 6px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-secondary);font-size:12px;font-weight:600;user-select:none;flex:none}.dsx2-pinned-head:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12));color:var(--dsw-alias-label-primary)}.dsx2-pin-icon{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-chevron{flex:none;font-size:10px;line-height:1;color:var(--dsw-alias-label-tertiary);transition:transform .15s ease}.dsx2-chevron-closed{transform:rotate(-90deg)}.dsx2-pinned-count{flex:none;color:var(--dsw-alias-label-tertiary);font-weight:400;font-size:11px}.dsx2-pinned-rows{display:flex;flex-direction:column;max-height:150px;overflow-y:auto;padding-bottom:2px}.dsx2-pinned-closed .dsx2-pinned-rows{display:none}.dsx2-list{display:none;flex:1;min-height:0;overflow-y:auto;padding-bottom:12px}html.dsx2-recent-on .dsx2-list{display:block}.dsx2-row{display:flex;align-items:center;gap:7px;height:30px;padding:0 8px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-primary);font-size:13px;user-select:none}.dsx2-row:hover{background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-row-current{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18))}.dsx2-row-dead{opacity:.45;cursor:default}.dsx2-row-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dsx2-row-pin{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-row-tag{flex:none;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--dsw-alias-label-tertiary);font-size:11px;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1));border-radius:5px;padding:1px 5px}.dsx2-row-time{flex:none;color:var(--dsw-alias-label-tertiary);font-size:11px}.dsx2-more{display:none;flex:none;width:20px;height:20px;align-items:center;justify-content:center;border:none;background:transparent;border-radius:5px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:13px;line-height:1;padding:0}.dsx2-row:hover .dsx2-more{display:inline-flex}.dsx2-more:hover{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary)}.dsx2-dot{width:7px;height:7px;border-radius:50%;flex:none}.dsx2-dot-run{background:var(--dsw-alias-state-success-primary,#22c55e);animation:dsx2-pulse 1.6s ease-in-out infinite}.dsx2-dot-done{background:var(--dsw-alias-state-success-primary,#22c55e);opacity:.55}.dsx2-dot-warn{background:var(--dsw-alias-state-warn-primary,#f59e0b)}@keyframes dsx2-pulse{0%,100%{opacity:1}50%{opacity:.35}}.dsx2-empty{color:var(--dsw-alias-label-tertiary);padding:14px 10px;font-size:12px}.dsx2-grp-rows{content-visibility:auto;contain-intrinsic-size:auto 30px}.dsx2-grp-head{margin-top:3px}.dsx2-grp-icon{color:var(--dsw-alias-label-tertiary)}.dsx2-menu{position:fixed;z-index:9999;min-width:170px;background:var(--dsw-alias-bg-layer-1,#ffffff);border:1px solid var(--dsw-alias-border-l2,rgba(0,0,0,.12));border-radius:10px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:flex;flex-direction:column}.dsx2-menu-item{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;border:none;background:transparent;border-radius:7px;color:var(--dsw-alias-label-primary);cursor:pointer;font-size:13px;text-align:left;font-family:inherit;white-space:nowrap}.dsx2-menu-item:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12))}@media (prefers-reduced-motion:reduce){.dsx2-dot-run{animation:none}}";
+		const css = ".dsx2-host{order:-1;flex:none;display:flex;flex-direction:column;gap:6px;padding:2px 0 6px}html.dsx2-recent-on .dsx2-host{flex:1 1 0;min-height:0}html.dsx2-recent-on [data-slot=\"sidebar.workspaces\"] > div > :not(.dsx2-host){display:none!important}.dsx2-bar{display:flex;align-items:center;gap:6px;flex:none}.dsx2-tabs{display:flex;flex:1;min-width:0;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.08));border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:9px;padding:2px;gap:2px}.dsx2-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;height:24px;border:none;border-radius:7px;background:transparent;color:var(--dsw-alias-label-secondary);cursor:pointer;font-size:12px;line-height:16px;padding:0 6px;white-space:nowrap;overflow:hidden;font-family:inherit}.dsx2-tab:hover{color:var(--dsw-alias-label-primary)}.dsx2-tab-active{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary);font-weight:500}.dsx2-search{display:none;align-items:center;gap:6px;height:26px;padding:0 8px;border:1px solid var(--dsw-alias-border-l1,transparent);border-radius:8px;color:var(--dsw-alias-label-tertiary);flex:none}html.dsx2-recent-on .dsx2-search{display:flex}.dsx2-search-input{flex:1;min-width:0;border:none;outline:none;background:transparent;color:var(--dsw-alias-label-primary);font-size:12px;line-height:16px;font-family:inherit}.dsx2-search-input::placeholder{color:var(--dsw-alias-label-tertiary)}.dsx2-pinned{flex:none;display:flex;flex-direction:column;min-height:0}.dsx2-pinned-head{display:flex;align-items:center;gap:5px;height:26px;padding:0 6px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-secondary);font-size:12px;font-weight:600;user-select:none;flex:none}.dsx2-pinned-head:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12));color:var(--dsw-alias-label-primary)}.dsx2-pin-icon{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-chevron{flex:none;font-size:10px;line-height:1;color:var(--dsw-alias-label-tertiary);transition:transform .15s ease}.dsx2-chevron-closed{transform:rotate(-90deg)}.dsx2-pinned-count{flex:none;color:var(--dsw-alias-label-tertiary);font-weight:400;font-size:11px}.dsx2-pinned-rows{display:flex;flex-direction:column;max-height:150px;overflow-y:auto;padding-bottom:2px}.dsx2-pinned-closed .dsx2-pinned-rows{display:none}.dsx2-list{display:none;flex:1;min-height:0;overflow-y:auto;padding-bottom:12px}html.dsx2-recent-on .dsx2-list{display:block}.dsx2-row{display:flex;align-items:center;gap:7px;height:30px;padding:0 8px;border-radius:8px;cursor:pointer;color:var(--dsw-alias-label-primary);font-size:13px;user-select:none}.dsx2-row:hover{background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-row-current{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18))}.dsx2-row-dead{opacity:.45;cursor:default}.dsx2-row-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dsx2-row-pin{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-brand-primary,#6366f1)}.dsx2-row-tag{flex:none;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--dsw-alias-label-tertiary);font-size:11px;background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1));border-radius:5px;padding:1px 5px}.dsx2-row-time{flex:none;color:var(--dsw-alias-label-tertiary);font-size:11px}.dsx2-more{display:none;flex:none;width:20px;height:20px;align-items:center;justify-content:center;border:none;background:transparent;border-radius:5px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:13px;line-height:1;padding:0}.dsx2-row:hover .dsx2-more{display:inline-flex}.dsx2-more:hover{background:var(--dsw-alias-bg-layer-2,rgba(128,128,128,.18));color:var(--dsw-alias-label-primary)}.dsx2-dot{width:7px;height:7px;border-radius:50%;flex:none}.dsx2-dot-run{background:var(--dsw-alias-state-success-primary,#22c55e);animation:dsx2-pulse 1.6s ease-in-out infinite}.dsx2-dot-done{background:var(--dsw-alias-state-success-primary,#22c55e);opacity:.55}.dsx2-dot-warn{background:var(--dsw-alias-state-warn-primary,#f59e0b)}@keyframes dsx2-pulse{0%,100%{opacity:1}50%{opacity:.35}}.dsx2-empty{color:var(--dsw-alias-label-tertiary);padding:14px 10px;font-size:12px}.dsx2-more-btn{display:block;width:calc(100% - 16px);margin:2px 8px 0 8px;height:28px;border:none;background:transparent;border-radius:8px;color:var(--dsw-alias-label-tertiary);cursor:pointer;font-size:12px;font-family:inherit;text-align:left;padding:0 12px 0 28px}.dsx2-more-btn:hover{color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1,rgba(128,128,128,.1))}.dsx2-grp-rows{content-visibility:auto;contain-intrinsic-size:auto 30px}.dsx2-grp-head{margin-top:3px}.dsx2-grp-icon{color:var(--dsw-alias-label-tertiary)}.dsx2-menu{position:fixed;z-index:9999;min-width:170px;background:var(--dsw-alias-bg-layer-1,#ffffff);border:1px solid var(--dsw-alias-border-l2,rgba(0,0,0,.12));border-radius:10px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:flex;flex-direction:column}.dsx2-menu-item{display:flex;align-items:center;gap:8px;height:30px;padding:0 10px;border:none;background:transparent;border-radius:7px;color:var(--dsw-alias-label-primary);cursor:pointer;font-size:13px;text-align:left;font-family:inherit;white-space:nowrap}.dsx2-menu-item:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.12))}@media (prefers-reduced-motion:reduce){.dsx2-dot-run{animation:none}}";
 		const cssTagId = "dsh-plugin-sidebar-views/sidebar.css";
 		if (typeof document !== "undefined" && !document.querySelector("style[data-plugin-css=\"" + cssTagId + "\"]")) {
 			const tag = document.createElement("style");
@@ -56,6 +56,19 @@ window.__ModuleLoader__.load({
 		let resizer = null;
 		let menuEl = null;
 		let wsMenuObserver = null;
+
+		// ── perf guards (20k-session scale, 2026-09-09) ────────────────────
+		// Host session.list costs ~14s at 20k sessions, so every avoidable
+		// full pull or full list rebuild is user-visible lag. Three guards:
+		// refresh throttling, a row-model cache keyed on a data fingerprint,
+		// and a per-group render cap with an incremental "show more" button.
+		const REFRESH_MIN_GAP_MS = 45000;
+		const RENDER_CHUNK_FIRST = 300;
+		const RENDER_CHUNK_MORE = 2000;
+		let lastRefreshAt = 0;
+		let rowsCache = null;
+		let lastRenderFp = "";
+		let renderLimit = { ws: RENDER_CHUNK_FIRST, ext: RENDER_CHUNK_FIRST };
 
 		// ── helpers ────────────────────────────────────────────────────────
 		function relTime(ts, now) {
@@ -138,8 +151,14 @@ window.__ModuleLoader__.load({
 		// arrive through no push frame, so this view (and the native tree) stay
 		// stale until a reload. Re-pull the baseline ourselves — the store
 		// merge is idempotent and the pull itself is single-flight.
+		// At 20k sessions each pull is a ~14s host scan, so the 120s ticker,
+		// visibilitychange and tab switches funnel through a min-gap gate:
+		// within the gap a trigger is absorbed (the next ticker picks it up).
 		function refreshBaseline() {
 			if (disposed) return;
+			const now = Date.now();
+			if (now - lastRefreshAt < REFRESH_MIN_GAP_MS) return;
+			lastRefreshAt = now;
 			rebindSessions();
 			if (sessions === undefined || typeof sessions.refresh !== "function") return;
 			try {
@@ -221,6 +240,7 @@ window.__ModuleLoader__.load({
 			next.push({ id: id, title: title, pinnedAt: old !== undefined && Number.isFinite(old.pinnedAt) ? old.pinnedAt : Date.now() });
 			savePins(next);
 			legacyPost("pin", id);
+			lastRenderFp = "";
 			renderPinned();
 			renderList();
 		}
@@ -228,6 +248,7 @@ window.__ModuleLoader__.load({
 		function unpinSession(id) {
 			savePins(loadPins().filter((p) => p.id !== id));
 			legacyPost("unpin", id);
+			lastRenderFp = "";
 			renderPinned();
 			renderList();
 		}
@@ -580,6 +601,7 @@ window.__ModuleLoader__.load({
 			}
 			const time = document.createElement("span");
 			time.className = "dsx2-row-time";
+			time.dataset.ts = String(s.updatedAt);
 			time.textContent = relTime(s.updatedAt, now);
 			row.appendChild(time);
 			attachMore(row, s.id, s.blank === true ? "新会话" : String(s.displayTitle || s.id));
@@ -587,47 +609,92 @@ window.__ModuleLoader__.load({
 			return row;
 		}
 
+		// Fingerprint of everything that shapes the row model: session store
+		// contents, workspace membership, and the active filter. Cheap to
+		// build (counts + boundary ids only) and stable across renders that
+		// only differ in scroll/highlight, so repeated onData ticks reuse the
+		// cached rows instead of re-filtering and re-sorting 20k entries.
+		function rowsFingerprint(list, wlist) {
+			const ids = list.ids || [];
+			const head = ids.length > 0 ? ids[0] : "";
+			const tail = ids.length > 0 ? ids[ids.length - 1] : "";
+			const wsShape = (wlist.items || []).map((w) => w.workspaceId + ":" + ((w.sessionIds || []).length) + ":" + (w.archivedSessionIds || []).length).join("|");
+			return ids.length + "~" + head + "~" + tail + "~" + String(list.current) + "~" + String(list.phase) + "~" + filter + "~" + wsShape;
+		}
+
+		// "Show remaining N" — grows one group's cap and rebuilds the list.
+		function moreButtonEl(count, key) {
+			const btn = document.createElement("button");
+			btn.type = "button";
+			btn.className = "dsx2-more-btn";
+			btn.textContent = "显示其余 " + count + " 条";
+			btn.addEventListener("click", () => {
+				renderLimit[key] = (renderLimit[key] || RENDER_CHUNK_FIRST) + RENDER_CHUNK_MORE;
+				lastRenderFp = "";
+				renderList();
+			});
+			return btn;
+		}
+
+		// Rebuild only the visible DOM from the (capped) row model. Rows past
+		// the cap stay data-only until "show more" raises the cap, so a 20k
+		// workspace renders at most a few thousand nodes instead of ~120k.
 		function renderList() {
 			if (disposed || listDiv === null) return;
 			const list = sList !== undefined ? safeSnap(sList) : undefined;
 			const wlist = wList !== undefined ? safeSnap(wList) : undefined;
-			listDiv.textContent = "";
 			if (list === undefined || wlist === undefined || list.ids === undefined) {
+				lastRenderFp = "";
+				listDiv.textContent = "";
 				listDiv.appendChild(emptyNote("数据加载中…"));
+				return;
+			}
+			const fp = rowsFingerprint(list, wlist);
+			let parts;
+			let wsOf;
+			if (rowsCache === null || rowsCache.fp !== fp) {
+				const current = list.current;
+				const byId = list.byId || {};
+				const archived = new Set(wlist.archivedSessionIds || []);
+				const q = filter.trim().toLowerCase();
+				wsOf = new Map();
+				for (const w of wlist.items || []) {
+					const sids = w.sessionIds || [];
+					for (const id of sids) if (wsOf.has(id) === false) wsOf.set(id, w);
+				}
+				const rows = [];
+				for (const id of list.ids) {
+					const s = byId[id];
+					if (s === undefined) continue;
+					if (s.origin === "subagent" || archived.has(s.id)) continue;
+					if (s.blank === true && s.id !== current) continue;
+					if (q !== "" && String(s.displayTitle || "").toLowerCase().indexOf(q) === -1) continue;
+					rows.push(s);
+				}
+				rows.sort(byRecency);
+				fillWorkspaceByCwd(wsOf, rows, wlist.items);
+				if (rows.length === 0 && q === "" && list.ids.length === 0 && list.phase !== "ready") healOrphanedStore();
+				parts = partitionByWorkspace(rows, wsOf);
+				rowsCache = { fp: fp, parts: parts, wsOf: wsOf };
+			} else {
+				parts = rowsCache.parts;
+				wsOf = rowsCache.wsOf;
+			}
+			const viewFp = fp + "#" + renderLimit.ws + "," + renderLimit.ext + "#" + String(list.current) + "#" + (grpState.ws ? 1 : 0) + (grpState.ext ? 1 : 0);
+			if (viewFp === lastRenderFp) return;
+			lastRenderFp = viewFp;
+			listDiv.textContent = "";
+			if (parts.ws.length + parts.ext.length === 0) {
+				listDiv.appendChild(emptyNote(filter.trim() !== "" ? "无匹配会话" : "暂无会话"));
 				return;
 			}
 			const now = Date.now();
 			const current = list.current;
-			const byId = list.byId || {};
-			const archived = new Set(wlist.archivedSessionIds || []);
-			const q = filter.trim().toLowerCase();
-			const wsOf = new Map();
-			for (const w of wlist.items || []) {
-				const sids = w.sessionIds || [];
-				for (const id of sids) if (wsOf.has(id) === false) wsOf.set(id, w);
-			}
-			const rows = [];
-			for (const id of list.ids) {
-				const s = byId[id];
-				if (s === undefined) continue;
-				if (s.origin === "subagent" || archived.has(s.id)) continue;
-				if (s.blank === true && s.id !== current) continue;
-				if (q !== "" && String(s.displayTitle || "").toLowerCase().indexOf(q) === -1) continue;
-				rows.push(s);
-			}
-			rows.sort(byRecency);
-			fillWorkspaceByCwd(wsOf, rows, wlist.items);
-			if (rows.length === 0 && q === "" && list.ids.length === 0 && list.phase !== "ready") healOrphanedStore();
-			if (rows.length === 0) {
-				listDiv.appendChild(emptyNote(q !== "" ? "无匹配会话" : "暂无会话"));
-				return;
-			}
-			const parts = partitionByWorkspace(rows, wsOf);
 			// One parse per render, not one per row.
 			const pinIds = new Set(loadPins().map((p) => p.id));
 			// While filtering, ignore collapse state so matches in the
 			// (default-collapsed) external group stay reachable.
-			const searching = q !== "";
+			const searching = filter.trim() !== "";
 			const keepScroll = listDiv.scrollTop;
 			const groups = [
 				{ key: "ws", icon: folderGlyphSvg(), label: "工作区", items: parts.ws },
@@ -645,16 +712,30 @@ window.__ModuleLoader__.load({
 				listDiv.appendChild(groupHeadEl(g.icon, g.label, g.items.length, collapsed, toggle));
 				if (collapsed === false) {
 					// Rows live in their own wrapper so content-visibility can
-					// skip layout/paint for the thousands of offscreen rows.
+					// skip layout/paint for the offscreen rows.
 					const wrap = document.createElement("div");
 					wrap.className = "dsx2-grp-rows";
 					const frag = document.createDocumentFragment();
-					for (const s of g.items) frag.appendChild(rowEl(s, current, now, wsOf, pinIds));
+					const cap = renderLimit[g.key] || RENDER_CHUNK_FIRST;
+					const shown = Math.min(g.items.length, cap);
+					for (let i = 0; i < shown; i++) frag.appendChild(rowEl(g.items[i], current, now, wsOf, pinIds));
 					wrap.appendChild(frag);
 					listDiv.appendChild(wrap);
+					if (g.items.length > shown) listDiv.appendChild(moreButtonEl(g.items.length - shown, g.key));
 				}
 			}
 			listDiv.scrollTop = keepScroll;
+		}
+
+		// Time-only refresh for the 30s ticker: rewrite the relative-time text
+		// of already-rendered rows instead of rebuilding the whole list DOM.
+		function updateTimes() {
+			if (disposed || listDiv === null) return;
+			const now = Date.now();
+			for (const el of listDiv.querySelectorAll(".dsx2-row-time[data-ts]")) {
+				const ts = Number(el.dataset.ts);
+				if (Number.isFinite(ts)) el.textContent = relTime(ts, now);
+			}
 		}
 
 		function renderPinned() {
@@ -798,7 +879,7 @@ window.__ModuleLoader__.load({
 			const timer = ctx.get !== undefined ? ctx.get("timer") : undefined;
 			if (timer !== undefined) {
 				try { keepAlive = timer.interval(ensureHost, 800); } catch (error) {}
-				try { timeTicker = timer.interval(() => { if (mode === "recent") renderList(); }, 30000); } catch (error) {}
+				try { timeTicker = timer.interval(() => { if (mode === "recent") updateTimes(); }, 30000); } catch (error) {}
 				try { refreshTicker = timer.interval(() => { if (document.visibilityState !== "hidden") refreshBaseline(); }, 120000); } catch (error) {}
 			}
 			onVisible = () => { if (document.visibilityState !== "hidden") refreshBaseline(); };
