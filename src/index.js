@@ -160,7 +160,9 @@ async function buildEntries(sessionsRoot, prev = {}) {
 			continue;
 		}
 		for (const id of ids) {
-			if (id.startsWith('session-') === false) continue;
+			// session ids come in two shapes: session-<uuid> (interactive/subagent)
+			// and dsh-automation-session-<uuid> (automation runs)
+			if (id.startsWith('session-') === false && id.startsWith('dsh-automation-session-') === false) continue;
 			const logPath = path.join(keyDir, id, 'session.jsonl.zstd');
 			let stat;
 			try {

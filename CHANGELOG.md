@@ -25,6 +25,20 @@
   violating the 0.3.6 skip logic.
 - Host half changed → requires one dsh web restart to mount the route; the
   client degrades silently (fetch 404 → no-op) until then. Tests 25/25.
+- Fix (same day, post-restart verify): projectionStore lives on
+  sessions.manager (SessionManager), not on the SessionRuntime facade —
+  injection is now resolved through a manager fallback (this was why the
+  first restart looked like a no-op; titles only appeared for opened
+  sessions via the host's live-registry merge).
+- Grouping is membership-only again: removed the cwd-prefix fallback —
+  headless AMV drain workers run inside workspace directories, so a cwd
+  match wrongly exiled them into the workspace group (Jasper 2026-09-09).
+  Unregistered sessions are 外部调用; host side also accepts
+  dsh-automation-session-* log ids now (needs the next restart to serve
+  them, though those logs carry no session/title events today).
+- Pagination: the "show more" flow renders 5 rows at a time
+  (展开更多 5 个会话) instead of 300 + 2000 — browsing 555 workspace
+  sessions no longer dumps hundreds of rows per click. Tests 26/26.
 
 ## 0.3.6 — 2026-09-09
 

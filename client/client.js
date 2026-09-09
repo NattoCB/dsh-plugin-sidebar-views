@@ -63,8 +63,8 @@ window.__ModuleLoader__.load({
 		// refresh throttling, a row-model cache keyed on a data fingerprint,
 		// and a per-group render cap with an incremental "show more" button.
 		const REFRESH_MIN_GAP_MS = 45000;
-		const RENDER_CHUNK_FIRST = 300;
-		const RENDER_CHUNK_MORE = 2000;
+		const RENDER_CHUNK_FIRST = 5;
+		const RENDER_CHUNK_MORE = 5;
 		let lastRefreshAt = 0;
 		let rowsCache = null;
 		let lastRenderFp = "";
@@ -84,9 +84,20 @@ window.__ModuleLoader__.load({
 		const TITLE_RETRY_MAX = 20;
 		let titleVersion = 0; // bumps per applied title so the render fingerprint sees it
 
+		// projectionStore lives on the SessionManager (sessions.manager), not on
+		// the SessionRuntime facade the "sessions" service exposes — probed via
+		// console dump 2026-09-09 (runtime ctor exposes open/refresh/binding…;
+		// the manager own-field owns projectionStores/projectionStore).
+		function projectionStoreOf(id) {
+			if (sessions === undefined) return undefined;
+			if (typeof sessions.projectionStore === "function") return sessions.projectionStore(id);
+			const manager = sessions.manager;
+			if (manager !== undefined && manager !== null && typeof manager.projectionStore === "function") return manager.projectionStore(id);
+			return undefined;
+		}
+
 		function injectTitles() {
 			if (titleMap === null || titleMap.size === 0) return;
-			if (sessions === undefined || typeof sessions.projectionStore !== "function") return;
 			const list = sList !== undefined ? safeSnap(sList) : undefined;
 			if (list === undefined || list.ids === undefined) return;
 			const byId = list.byId || {};
@@ -98,7 +109,7 @@ window.__ModuleLoader__.load({
 				const t = titleMap.get(id);
 				if (t === undefined || t === "") continue; // not in index — retry after next fetch
 				try {
-					const store = sessions.projectionStore(id);
+					const store = projectionStoreOf(id);
 					// Only fill a MISSING title; an existing row (host projection
 					// or rename push) stays authoritative via the seq watermark.
 					if (store !== undefined && store.get !== undefined && store.get("title") === undefined && typeof store.apply === "function") {
@@ -167,32 +178,12 @@ window.__ModuleLoader__.load({
 			return { ws: ws, ext: ext };
 		}
 
-		// The host registers sessions into workspaces late (fleet runs show up
-		// in session.list long before their workspace membership lands), so
-		// registry-only membership bounces fresh runs into the external group.
-		// Fall back to matching the session cwd against workspace paths —
-		// longest matching prefix wins, registry entries always win.
-		function fillWorkspaceByCwd(wsOf, rows, workspaces) {
-			const prefixes = [];
-			for (const w of workspaces || []) {
-				if (typeof w.path === "string" && w.path !== "") {
-					prefixes.push({ prefix: w.path.replace(/\/+$/, ""), w: w });
-				}
-			}
-			if (prefixes.length === 0) return;
-			for (const s of rows) {
-				if (wsOf.has(s.id)) continue;
-				const cwd = typeof s.cwd === "string" ? s.cwd.replace(/\/+$/, "") : "";
-				if (cwd === "") continue;
-				let best = null;
-				for (const p of prefixes) {
-					if (cwd === p.prefix || cwd.indexOf(p.prefix + "/") === 0) {
-						if (best === null || p.prefix.length > best.prefix.length) best = p;
-					}
-				}
-				if (best !== null) wsOf.set(s.id, best.w);
-			}
-		}
+		// Grouping is membership-only: a session belongs to the workspace that
+		// registered it (wsOf), everything unregistered is 外部调用 (headless —
+		// CLI/automation callers with no workspace). No cwd-prefix fallback:
+		// headless callers run inside workspace directories too (AMV drain
+		// workers live under Automation-AMV-Hourly), so a cwd match would
+		// wrongly exile them into the workspace group (Jasper, 2026-09-09).
 
 		function loadGroupState() {
 			try {
@@ -691,7 +682,7 @@ window.__ModuleLoader__.load({
 			const btn = document.createElement("button");
 			btn.type = "button";
 			btn.className = "dsx2-more-btn";
-			btn.textContent = "显示其余 " + count + " 条";
+			btn.textContent = "展开更多 " + Math.min(RENDER_CHUNK_MORE, count) + " 个会话";
 			btn.addEventListener("click", () => {
 				renderLimit[key] = (renderLimit[key] || RENDER_CHUNK_FIRST) + RENDER_CHUNK_MORE;
 				lastRenderFp = "";
@@ -736,7 +727,6 @@ window.__ModuleLoader__.load({
 					rows.push(s);
 				}
 				rows.sort(byRecency);
-				fillWorkspaceByCwd(wsOf, rows, wlist.items);
 				if (rows.length === 0 && q === "" && list.ids.length === 0 && list.phase !== "ready") healOrphanedStore();
 				parts = partitionByWorkspace(rows, wsOf);
 				rowsCache = { fp: fp, parts: parts, wsOf: wsOf };
@@ -1002,7 +992,6 @@ window.__ModuleLoader__.load({
 		exports.inject = inject;
 		exports._mergePins = mergePins;
 		exports._partitionByWorkspace = partitionByWorkspace;
-		exports._fillWorkspaceByCwd = fillWorkspaceByCwd;
 		exports._findWorkspaceCwd = findWorkspaceCwd;
 		exports._expandDisplayCwd = expandDisplayCwd;
 		exports.apply = apply;

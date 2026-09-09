@@ -114,37 +114,28 @@ test("partitionByWorkspace keeps Automation-* workspace sessions in the workspac
 	assert.deepEqual(parts.ext.map((s) => s.id), ["headless-1"]);
 });
 
-test("fillWorkspaceByCwd catches sessions the workspace registry registered late", () => {
+test("grouping is membership-only: unregistered sessions stay external even when cwd matches a workspace", () => {
 	const exports = loadClientExports();
-	const workspaces = [
-		{ title: "AMV", path: "/Volumes/x/Automation-AMV-Hourly", sessionIds: ["registered-1"] },
-		{ title: "Home", path: "/Users/x/Desktop/DeepSeekHarnessWorkspace", sessionIds: [] }
-	];
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	assert.ok(code.includes("fillWorkspaceByCwd") === false, "the cwd-prefix fallback must stay removed (Jasper 2026-09-09: headless AMV drain workers live inside workspace dirs)");
+	const workspaces = [{ title: "AMV", path: "/Volumes/x/Automation-AMV-Hourly", sessionIds: ["registered-1"] }];
 	const wsOf = new Map([["registered-1", workspaces[0]]]);
 	const rows = [
-		// fresh fleet run: cwd inside the automation workspace, no registry entry
-		{ id: "fresh-run", cwd: "/Volumes/x/Automation-AMV-Hourly" },
-		// nested subdir still matches the workspace prefix
-		{ id: "nested-run", cwd: "/Volumes/x/Automation-AMV-Hourly/sub/dir" },
-		// trailing slash on the workspace path must not break the match
-		{ id: "slashy", cwd: "/Users/x/Desktop/DeepSeekHarnessWorkspace" },
-		// cwd matching no workspace stays untouched (true headless)
-		{ id: "foreign", cwd: "/tmp/elsewhere" },
-		// no cwd at all stays untouched
-		{ id: "nocwd" }
+		{ id: "registered-1", cwd: "/Volumes/x/Automation-AMV-Hourly" },
+		// headless drain worker: cwd inside the workspace dir but never registered
+		{ id: "drain-worker", cwd: "/Volumes/x/Automation-AMV-Hourly/src" }
 	];
-	exports._fillWorkspaceByCwd(wsOf, rows, workspaces);
-	assert.equal(wsOf.get("fresh-run"), workspaces[0]);
-	assert.equal(wsOf.get("nested-run"), workspaces[0]);
-	assert.equal(wsOf.get("slashy"), workspaces[1]);
-	assert.equal(wsOf.has("foreign"), false, "no workspace prefix match means still external");
-	assert.equal(wsOf.has("nocwd"), false);
-	assert.equal(wsOf.get("registered-1"), workspaces[0], "registry entries are never overwritten");
-	// longest prefix wins when workspaces nest
-	const nested = [{ title: "root", path: "/Volumes/x", sessionIds: [] }, { title: "leaf", path: "/Volumes/x/Automation-AMV-Hourly", sessionIds: [] }];
-	const wsOf2 = new Map();
-	exports._fillWorkspaceByCwd(wsOf2, [{ id: "r", cwd: "/Volumes/x/Automation-AMV-Hourly" }], nested);
-	assert.equal(wsOf2.get("r"), nested[1], "the most specific workspace prefix must win");
+	const parts = exports._partitionByWorkspace(rows, wsOf);
+	assert.deepEqual(parts.ws.map((s) => s.id), ["registered-1"], "registry membership wins");
+	assert.deepEqual(parts.ext.map((s) => s.id), ["drain-worker"], "unregistered sessions are 外部调用 regardless of cwd");
+});
+
+test("show-more pagination renders five rows per step", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	assert.ok(/const RENDER_CHUNK_FIRST = 5;/.test(code), "first chunk is five rows");
+	assert.ok(/const RENDER_CHUNK_MORE = 5;/.test(code), "each show-more adds five rows");
+	assert.ok(code.includes("展开更多 "), "the button labels the batch size in sessions");
+	assert.ok(code.includes("projectionStoreOf"), "title injection resolves the store through the manager fallback");
 });
 
 /** Build a fake fiber element: memoizedProps plus an optional parent. */
