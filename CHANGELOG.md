@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.17 — 2026-09-09
+
+- Groups with fewer than five sessions (no native overflow button) had
+  their control row inserted inside the header wrapper span, landing
+  ABOVE the sessions. The row now appends at the section tail for such
+  groups. GUI-verified with a constructed 2-row group (tail, then
+  auto-removed on empty). Tests 34/34.
+
 ## 0.3.16 — 2026-09-09
 
 - State machine rebuilt around the native tree's actual four shapes

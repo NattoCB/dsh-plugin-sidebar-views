@@ -371,3 +371,9 @@ test("four-shape state machine: folding goes through the group header, cap0 is g
 	assert.ok(/header\.click\(\);/.test(code), "folding always goes through the group header click (React's own toggle)");
 	assert.ok(/if \(total === 0\) \{/.test(code), "shape C and empty groups render no control row");
 });
+
+test("≤5-row groups get their control row at the section tail, never inside the header span", () => {
+	const code = readFileSync(new URL("../client/client.js", import.meta.url), "utf8");
+	assert.ok(!/anchor\.parentNode\.insertBefore/.test(code), "the header-wrapper insertion path (ctrl above sessions) is gone");
+	assert.ok(/sec\.appendChild\(ctrl\);/.test(code), "no-button groups append the control row at the section tail");
+});

@@ -226,9 +226,15 @@ window.__ModuleLoader__.load({
 				}
 				if (more.parentNode !== ctrl) ctrl.appendChild(more);
 				if (fold.parentNode !== ctrl) ctrl.appendChild(fold);
-				const anchor = native !== null ? native : header;
-				if (ctrl.previousElementSibling !== anchor || ctrl.nextElementSibling !== (native !== null ? native.nextSibling : null)) {
-					anchor.parentNode.insertBefore(ctrl, native !== null ? native.nextSibling : null);
+				// Position: right after the native button (groups with overflow),
+				// or at the section tail for ≤5-row groups — never inside the
+				// header wrapper span, where it would land above the sessions.
+				if (native !== null) {
+					if (ctrl.previousElementSibling !== native || ctrl.nextElementSibling !== native.nextSibling) {
+						native.parentNode.insertBefore(ctrl, native.nextSibling);
+					}
+				} else if (ctrl.parentNode !== sec || sec.lastElementChild !== ctrl) {
+					sec.appendChild(ctrl);
 				}
 				if (isExpanded) {
 					const stored = wsCaps.has(title) ? wsCaps.get(title) : 0;
